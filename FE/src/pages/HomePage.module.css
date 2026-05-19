@@ -1,0 +1,56 @@
+.page {}
+
+/* About Home */
+.aboutHome { padding: 7rem 0; background: var(--bg); }
+.aboutGrid { display: grid; grid-template-columns: 1fr 1.1fr; gap: 5rem; align-items: center; }
+.aboutVisual { position: relative; }
+.aboutImgWrap {
+  position: relative; aspect-ratio: 4/3; background: var(--bg3);
+  border-radius: 8px; overflow: visible; border: 1px solid var(--border);
+}
+.aboutImgWrap img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
+.imgPlaceholder {
+  width: 100%; height: 100%; display: flex; align-items: center;
+  justify-content: center; font-size: 5rem; opacity: 0.2;
+}
+.aboutBadge {
+  position: absolute; bottom: -1.5rem; right: -1.5rem;
+  background: var(--red); padding: 1.5rem; border-radius: 8px;
+  text-align: center; min-width: 130px;
+  box-shadow: 0 16px 40px rgba(230,27,27,0.3);
+}
+.badgeNum { font-family: var(--font-display); font-size: 2.5rem; color: #fff; display: block; }
+.badgeLabel { font-size: 0.62rem; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.8); }
+.valuesGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-top: 1.75rem; }
+.valItem {
+  display: flex; align-items: flex-start; gap: 0.75rem;
+  padding: 0.875rem; background: var(--white15); border-radius: 6px;
+  border-left: 2px solid var(--red);
+}
+.valIcon { font-size: 1.25rem; flex-shrink: 0; margin-top: 2px; }
+.valItem h4 { font-size: 0.83rem; font-weight: 700; margin-bottom: 0.15rem; }
+.valItem p  { font-size: 0.73rem; color: var(--white70); }
+
+/* Stats */
+.statsSection {
+  background: var(--bg2); border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.statsGrid { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: repeat(4,1fr); }
+.statItem {
+  padding: 2.5rem 1.5rem; text-align: center;
+  border-right: 1px solid var(--border);
+}
+.statItem:last-child { border-right: none; }
+
+@media (max-width: 1024px) {
+  .aboutGrid { grid-template-columns: 1fr; gap: 3rem; }
+  .statsGrid  { grid-template-columns: 1fr 1fr; }
+  .statItem:nth-child(2) { border-right: none; }
+  .statItem:nth-child(3) { border-top: 1px solid var(--border); }
+}
+@media (max-width: 640px) {
+  .aboutHome { padding: 4rem 0; }
+  .aboutBadge { bottom: -1rem; right: -0.5rem; }
+  .valuesGrid { grid-template-columns: 1fr; }
+}

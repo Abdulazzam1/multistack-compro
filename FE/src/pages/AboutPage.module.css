@@ -1,0 +1,58 @@
+.story { padding: 6rem 0; background: var(--bg); }
+.storyGrid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 5rem; align-items: start; }
+.text { color: var(--white70); font-size: 0.95rem; line-height: 1.8; }
+.storyImg {
+  aspect-ratio: 1; background: var(--bg3); border-radius: 8px;
+  border: 1px solid var(--border); overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+}
+.storyImg img { width: 100%; height: 100%; object-fit: cover; }
+.imgPlaceholder { font-size: 5rem; opacity: 0.2; }
+.vmGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-top: 2rem; }
+.vmBox { padding: 1.5rem; background: var(--bg2); border-radius: 8px; border-left: 3px solid var(--red); }
+.vmBox h3 { font-family: var(--font-display); font-size: 1.6rem; color: var(--red); margin-bottom: 0.75rem; }
+.vmBox p, .vmBox ul { font-size: 0.85rem; color: var(--white70); line-height: 1.7; }
+.vmBox ul { padding-left: 1.25rem; list-style: disc; }
+.vmBox ul li { margin-bottom: 0.35rem; }
+
+.statsSection { background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 0; }
+.statsGrid { display: grid; grid-template-columns: repeat(4,1fr); }
+.statItem { padding: 2.5rem 2rem; text-align: center; border-right: 1px solid var(--border); }
+.statItem:last-child { border-right: none; }
+
+.valuesSection { padding: 6rem 0; background: var(--bg); }
+.valuesGrid { display: grid; grid-template-columns: repeat(4,1fr); gap: 1.5rem; margin-top: 2.5rem; }
+.valueCard {
+  padding: 2rem 1.5rem; background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 8px; text-align: center; transition: var(--trans);
+}
+.valueCard:hover { border-color: var(--border-red); }
+.valueIcon { font-size: 2rem; margin-bottom: 1rem; }
+.valueCard h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; }
+.valueCard p { font-size: 0.82rem; color: var(--white70); line-height: 1.65; }
+
+.awardsSection { padding: 6rem 0; background: var(--bg2); border-top: 1px solid var(--border); }
+.awardsGrid { display: grid; grid-template-columns: repeat(4,1fr); gap: 1.5rem; margin-top: 2.5rem; }
+.awardCard {
+  padding: 1.75rem 1.5rem; background: var(--bg); border: 1px solid var(--border);
+  border-radius: 8px; text-align: center; transition: var(--trans);
+}
+.awardCard:hover { border-color: var(--border-red); }
+.awardBadge { font-size: 2rem; margin-bottom: 1rem; }
+.awardImg { width: 60px; height: 60px; object-fit: contain; margin: 0 auto 1rem; }
+.awardCard h4 { font-size: 0.9rem; font-weight: 700; margin-bottom: 0.25rem; }
+.awardCard p { font-size: 0.78rem; color: var(--white70); }
+.awardYear { font-family: var(--font-mono); font-size: 0.68rem; color: var(--red); margin-top: 0.5rem; }
+
+@media (max-width: 1024px) {
+  .storyGrid { grid-template-columns: 1fr; gap: 3rem; }
+  .storyImg { display: none; }
+  .valuesGrid, .awardsGrid { grid-template-columns: repeat(2,1fr); }
+  .statsGrid { grid-template-columns: repeat(2,1fr); }
+  .statItem:nth-child(2) { border-right: none; }
+}
+@media (max-width: 640px) {
+  .vmGrid { grid-template-columns: 1fr; }
+  .valuesGrid, .awardsGrid { grid-template-columns: 1fr; }
+  .statsGrid { grid-template-columns: 1fr 1fr; }
+}

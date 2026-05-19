@@ -1,0 +1,44 @@
+.servicesSection { padding: 5rem 0; }
+.serviceList { display: flex; flex-direction: column; gap: 1rem; }
+.loadingList { display: flex; flex-direction: column; gap: 1rem; }
+.skeleton { height: 90px; background: var(--bg2); border-radius: 8px; animation: pulse 1.5s ease infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+.serviceRow {
+  display: grid; grid-template-columns: 80px 1fr auto; gap: 2rem; align-items: center;
+  padding: 1.75rem 2rem; background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 8px; cursor: pointer; transition: var(--trans);
+}
+.serviceRow:hover { border-color: var(--border-red); background: var(--bg3); transform: translateX(4px); }
+.rowNum { font-family: var(--font-display); font-size: 2rem; color: var(--red); opacity: 0.5; }
+.rowInfo h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 0.35rem; }
+.rowInfo p { font-size: 0.85rem; color: var(--white70); line-height: 1.6; max-width: 640px; }
+.rowArrow { font-size: 1.5rem; color: var(--red); transition: transform var(--trans); }
+.serviceRow:hover .rowArrow { transform: translateX(4px); }
+
+/* Modal */
+.modal { position: fixed; inset: 0; z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 1rem; background: rgba(0,0,0,0.75); backdrop-filter: blur(8px); }
+.modalBox {
+  position: relative; background: var(--bg2); border: 1px solid var(--border-red);
+  border-radius: 12px; padding: 2.5rem; max-width: 600px; width: 100%;
+  max-height: 90vh; overflow-y: auto; animation: fadeIn 0.25s ease;
+}
+@keyframes fadeIn { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+.closeBtn { position: absolute; top: 1rem; right: 1rem; background: none; border: none; color: var(--white70); font-size: 1.2rem; cursor: pointer; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 4px; transition: var(--trans); }
+.closeBtn:hover { background: var(--white15); color: var(--white); }
+.modalIcon { font-size: 2.5rem; margin-bottom: 1rem; }
+.modalTitle { font-family: var(--font-display); font-size: 2rem; margin-bottom: 1rem; }
+.modalDesc { color: var(--white70); font-size: 0.9rem; line-height: 1.8; margin-bottom: 1.5rem; }
+.scopeTitle { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 3px; color: var(--red); text-transform: uppercase; margin-bottom: 0.75rem; }
+.scopeList { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 2rem; }
+.scopeItem { display: flex; gap: 0.75rem; align-items: flex-start; font-size: 0.88rem; color: var(--white70); padding: 0.5rem 0; border-bottom: 1px solid var(--border); }
+.scopeDot { color: var(--red); font-size: 0.65rem; margin-top: 4px; flex-shrink: 0; }
+.modalActions { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+.ctaSection { padding: 5rem 0; background: var(--bg2); border-top: 1px solid var(--border); }
+
+@media (max-width: 768px) {
+  .serviceRow { grid-template-columns: 1fr auto; gap: 1rem; }
+  .rowNum { display: none; }
+  .servicesSection { padding: 3rem 0; }
+}

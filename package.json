@@ -1,0 +1,13 @@
+{
+  "name": "multistack-indonesia",
+  "private": true,
+  "description": "PT. Multistack Indonesia — Company Profile System",
+  "scripts": {
+    "dev:be":       "cd BE && npm run dev",
+    "dev:fe":       "cd FE && npm run dev",
+    "dev:cms":      "cd CMS && npm run dev",
+    "install:all":  "cd BE && npm install && cd ../FE && npm install && cd ../CMS && npm install",
+    "migrate":      "cd BE && npm run migrate",
+    "seed":         "cd BE && npm run seed"
+  }
+}

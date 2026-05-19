@@ -1,0 +1,24 @@
+.loading,.notFound{min-height:60vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.5rem;color:var(--white70)}
+.cat{font-family:var(--font-mono);font-size:0.7rem;letter-spacing:3px;color:var(--red);text-transform:uppercase;margin-bottom:0.75rem}
+.title{font-family:var(--font-display);font-size:clamp(2rem,5vw,3.5rem);line-height:1.05}
+.detail{padding:3rem 0 6rem}
+.metaGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2.5rem}
+.metaItem{padding:1rem;background:var(--bg2);border-radius:6px;border:1px solid var(--border)}
+.metaItem label{font-family:var(--font-mono);font-size:0.65rem;letter-spacing:2px;color:var(--red);text-transform:uppercase;display:block;margin-bottom:0.35rem}
+.metaItem strong{font-size:0.9rem;font-weight:600}
+.gallery{margin-bottom:3rem}
+.mainImg{aspect-ratio:16/9;background:var(--bg3);border-radius:8px;overflow:hidden;border:1px solid var(--border);margin-bottom:0.75rem}
+.mainImg img{width:100%;height:100%;object-fit:cover}
+.thumbRow{display:flex;gap:0.5rem;flex-wrap:wrap}
+.thumb{width:80px;height:60px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;overflow:hidden;cursor:pointer;padding:0;transition:border-color var(--trans)}
+.thumb img{width:100%;height:100%;object-fit:cover}
+.thumb.activeThumb,.thumb:hover{border-color:var(--red)}
+.content{display:grid;grid-template-columns:1fr 1fr;gap:3rem;margin-bottom:3rem}
+.contentBlock h3{font-family:var(--font-display);font-size:1.5rem;color:var(--red);margin-bottom:1rem}
+.contentBlock p{font-size:0.9rem;color:var(--white70);line-height:1.8}
+.scopeList{display:flex;flex-direction:column;gap:0}
+.scopeItem{display:flex;gap:0.75rem;align-items:flex-start;font-size:0.88rem;color:var(--white70);padding:0.65rem 0;border-bottom:1px solid var(--border)}
+.scopeItem span{color:var(--red);font-size:0.65rem;margin-top:4px;flex-shrink:0}
+.backRow{display:flex;gap:1rem;flex-wrap:wrap}
+@media(max-width:1024px){.content{grid-template-columns:1fr}.metaGrid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){.metaGrid{grid-template-columns:1fr 1fr}.detail{padding:2rem 0 4rem}}

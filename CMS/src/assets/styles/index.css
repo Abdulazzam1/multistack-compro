@@ -1,0 +1,85 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ═══════════════════════════════════════════════════════════════
+   Multistack CMS — Admin Panel Styles
+   Tema: Hitam dominan | Merah aksen | Putih teks
+═══════════════════════════════════════════════════════════════ */
+
+:root {
+  --bg:         #0a0a0a;
+  --bg2:        #111111;
+  --bg3:        #1a1a1a;
+  --bg4:        #222222;
+  --sidebar-w:  240px;
+  --red:        #e61b1b;
+  --red2:       #ff2b2b;
+  --red-dim:    rgba(230,27,27,0.12);
+  --border:     rgba(255,255,255,0.08);
+  --border-red: rgba(230,27,27,0.35);
+  --white:      #ffffff;
+  --white70:    rgba(255,255,255,0.7);
+  --white40:    rgba(255,255,255,0.4);
+  --white10:    rgba(255,255,255,0.08);
+  --font-display: 'Bebas Neue', sans-serif;
+  --font-body:    'DM Sans', sans-serif;
+  --font-mono:    'JetBrains Mono', monospace;
+  --trans: 0.25s cubic-bezier(0.4,0,0.2,1);
+  --radius: 8px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; }
+body { background: var(--bg); color: var(--white); font-family: var(--font-body); -webkit-font-smoothing: antialiased; }
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--red); border-radius: 2px; }
+
+/* ── CMS Component Classes ────────────────────────────── */
+
+/* Buttons */
+.btn { @apply inline-flex items-center gap-2 px-4 py-2 rounded font-semibold text-sm transition-all duration-200 cursor-pointer border-0; letter-spacing: 0.5px; }
+.btn-primary { background: var(--red); color: #fff; }
+.btn-primary:hover { background: var(--red2); transform: translateY(-1px); }
+.btn-outline { background: transparent; color: var(--white70); border: 1px solid var(--border); }
+.btn-outline:hover { border-color: var(--border-red); color: var(--white); background: var(--red-dim); }
+.btn-ghost { background: transparent; color: var(--white70); }
+.btn-ghost:hover { background: var(--white10); color: var(--white); }
+.btn-danger { background: transparent; color: #f87171; border: 1px solid rgba(248,113,113,0.3); }
+.btn-danger:hover { background: rgba(248,113,113,0.1); }
+.btn-sm { @apply px-3 py-1.5 text-xs; }
+
+/* Cards */
+.card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); }
+
+/* Badges */
+.badge { @apply inline-block px-2 py-0.5 rounded text-xs font-semibold; }
+.badge-green  { background: rgba(74,222,128,0.1); color: #4ADE80; border: 1px solid rgba(74,222,128,0.3); }
+.badge-red    { background: var(--red-dim); color: var(--red); border: 1px solid var(--border-red); }
+.badge-yellow { background: rgba(234,179,8,0.1); color: #EAB308; border: 1px solid rgba(234,179,8,0.3); }
+.badge-gray   { background: var(--white10); color: var(--white70); border: 1px solid var(--border); }
+
+/* Table */
+.th { @apply px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider; color: var(--white70); font-family: var(--font-mono); letter-spacing: 2px; }
+.td { @apply px-4 py-3 text-sm; border-bottom: 1px solid var(--border); color: var(--white70); }
+.td:last-child { border-bottom-color: transparent; }
+
+/* Form */
+.form-label { @apply block text-xs font-semibold uppercase tracking-wider mb-1.5; color: var(--white70); font-family: var(--font-mono); }
+.form-input {
+  @apply w-full px-3 py-2.5 rounded text-sm outline-none transition-all;
+  background: var(--bg3); border: 1px solid var(--border); color: var(--white);
+  font-family: var(--font-body);
+}
+.form-input:focus { border-color: var(--red); box-shadow: 0 0 0 3px rgba(230,27,27,0.1); }
+.form-input::placeholder { color: var(--white40); }
+textarea.form-input { resize: vertical; min-height: 100px; }
+select.form-input option { background: var(--bg2); }
+
+/* Page title */
+.page-title { font-family: var(--font-display); font-size: 2rem; letter-spacing: 1px; }
+
+/* Animations */
+@keyframes fadeIn { from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)} }
+.animate-in { animation: fadeIn 0.3s ease both; }

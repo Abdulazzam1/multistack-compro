@@ -1,0 +1,8 @@
+.pageHeader{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
+.thumb{width:48px;height:40px;background:var(--bg3);border-radius:4px;overflow:hidden;flex-shrink:0}
+.thumb img{width:100%;height:100%;object-fit:cover}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:200;display:flex;align-items:center;justify-content:center;padding:1rem}
+.confirmBox{background:var(--bg2);border:1px solid var(--border-red);border-radius:10px;padding:2rem;max-width:400px;width:100%}
+.confirmBox h3{font-family:var(--font-display);font-size:1.5rem;margin-bottom:0.5rem}
+.confirmBox p{font-size:0.88rem;color:var(--white70);margin-bottom:1.5rem}
+.confirmActions{display:flex;gap:0.75rem}

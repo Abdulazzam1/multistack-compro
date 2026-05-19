@@ -1,0 +1,50 @@
+.footer {
+  background: var(--bg2);
+  border-top: 1px solid var(--border);
+  padding: 4rem 2rem 2rem;
+}
+.inner {
+  max-width: 1280px; margin: 0 auto;
+  display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 3rem; margin-bottom: 3rem;
+}
+/* Brand */
+.logo { display: flex; align-items: center; gap: 12px; margin-bottom: 1rem; }
+.logoMark {
+  width: 38px; height: 38px; background: var(--red);
+  display: flex; align-items: center; justify-content: center;
+  clip-path: polygon(0 0,85% 0,100% 15%,100% 100%,15% 100%,0 85%);
+  font-family: var(--font-display); font-size: 1rem; color: #fff;
+}
+.logoText { display: flex; flex-direction: column; line-height: 1; font-family: var(--font-display); font-size: 1.2rem; letter-spacing: 2px; }
+.sub { font-size: 0.55rem; color: var(--red); letter-spacing: 3px; font-family: var(--font-body); font-weight: 600; text-transform: uppercase; }
+.desc { font-size: 0.83rem; color: var(--white70); line-height: 1.7; max-width: 260px; margin-bottom: 1.25rem; }
+.socials { display: flex; gap: 0.5rem; }
+.socialBtn {
+  width: 36px; height: 36px; background: var(--white15); border: 1px solid var(--border);
+  border-radius: 6px; display: flex; align-items: center; justify-content: center;
+  color: var(--white70); transition: var(--trans);
+}
+.socialBtn svg { width: 16px; height: 16px; }
+.socialBtn:hover { background: var(--red); border-color: var(--red); color: #fff; }
+/* Columns */
+.col h4 {
+  font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 3px;
+  color: var(--red); text-transform: uppercase; margin-bottom: 1.25rem;
+}
+.col ul li { margin-bottom: 0.6rem; }
+.col ul li a, .col ul li span {
+  font-size: 0.83rem; color: var(--white70); transition: color var(--trans); display: block;
+}
+.col ul li a:hover { color: var(--white); padding-left: 4px; }
+/* Bottom */
+.bottom {
+  max-width: 1280px; margin: 0 auto; padding-top: 1.75rem;
+  border-top: 1px solid var(--border);
+  display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;
+}
+.bottom p { font-size: 0.75rem; color: var(--white40); }
+.powered { font-family: var(--font-mono); font-size: 0.7rem; }
+.powered span { color: var(--red); }
+@media (max-width: 1024px) { .inner { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 640px) { .inner { grid-template-columns: 1fr; gap: 2rem; } .footer { padding: 3rem 1.25rem 1.5rem; } .bottom { flex-direction: column; text-align: center; } }

@@ -1,0 +1,28 @@
+.section { padding: 4rem 0 6rem; }
+.filters { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 2.5rem; }
+.filter {
+  padding: 0.45rem 1.1rem; background: none; border: 1px solid var(--border);
+  color: var(--white70); font-size: 0.8rem; border-radius: 20px;
+  cursor: pointer; font-family: var(--font-body); transition: var(--trans);
+}
+.filter:hover, .filter.active { background: var(--red); border-color: var(--red); color: #fff; }
+.grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; }
+.skeleton { aspect-ratio: 4/3; background: var(--bg2); border-radius: 8px; animation: pulse 1.5s ease infinite; }
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.empty { padding: 4rem; text-align: center; color: var(--white70); }
+.card { display: block; background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; transition: var(--trans); }
+.card:hover { border-color: var(--border-red); transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+.cardImg { aspect-ratio: 4/3; overflow: hidden; position: relative; background: var(--bg3); display: flex; align-items: center; justify-content: center; }
+.cardImg img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+.card:hover .cardImg img { transform: scale(1.06); }
+.imgPlaceholder { font-size: 3.5rem; opacity: 0.2; }
+.overlay { position: absolute; inset: 0; background: linear-gradient(to top,rgba(0,0,0,0.8),transparent); display: flex; align-items: flex-end; padding: 1rem 1.25rem; opacity: 0; transition: var(--trans); }
+.overlay span { font-size: 0.82rem; color: #fff; font-weight: 600; letter-spacing: 0.5px; }
+.card:hover .overlay { opacity: 1; }
+.cardBody { padding: 1.25rem; }
+.cardCat { font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 2px; color: var(--red); text-transform: uppercase; margin-bottom: 0.4rem; }
+.cardTitle { font-weight: 700; font-size: 0.95rem; line-height: 1.35; margin-bottom: 0.6rem; }
+.cardMeta { display: flex; gap: 1rem; flex-wrap: wrap; }
+.cardMeta span { font-family: var(--font-mono); font-size: 0.65rem; color: var(--white40); }
+@media (max-width: 1024px) { .grid { grid-template-columns: repeat(2,1fr); } }
+@media (max-width: 640px) { .grid { grid-template-columns: 1fr; } .section { padding: 3rem 0 4rem; } }
