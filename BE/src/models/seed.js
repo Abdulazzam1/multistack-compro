@@ -5,7 +5,7 @@ const { query, pool } = require('../config/db');
 async function seed() {
   console.log('🌱  Mengisi data awal...\n');
 
-  // ── Admin User ─────────────────────────────────────────────────────────────
+  // ── Admin User ──────────────────────────────────────────────────────────────
   const hash = await bcrypt.hash('multistack2024', 12);
   await query(`
     INSERT INTO admin_users (name, email, password_hash)
@@ -14,44 +14,66 @@ async function seed() {
   `, ['Super Admin', 'admin@multistack.co.id', hash]);
   console.log('  ✔ Admin user');
 
-  // ── Company Settings ───────────────────────────────────────────────────────
+  // ── Company Settings ────────────────────────────────────────────────────────
+  // Pakai UPSERT: jika sudah ada, update; jika belum, insert
   const settingsExists = await query('SELECT id FROM company_settings LIMIT 1');
   if (!settingsExists.rows.length) {
     await query(`
       INSERT INTO company_settings (
         about_title, about_description, vision, mission,
-        stats_projects, stats_clients, stats_years, stats_support,
+        stats_projects, stats_clients, stats_years, stats_support, stats_staff,
         contact_sales, contact_service, contact_email, contact_address,
-        operational_hours, social_instagram, social_linkedin, social_facebook
-      ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16)
+        operational_hours, social_instagram, social_linkedin, social_facebook,
+        contact_persons, footer_contacts
+      ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19)
     `, [
       'PT. Multistack Indonesia',
       'Perusahaan terkemuka dalam penyediaan solusi MEP terpadu dengan rekam jejak lebih dari 16 tahun.',
       'Menjadi perusahaan MEP terdepan di Asia Tenggara yang mengutamakan inovasi, keberlanjutan, dan kepuasan pelanggan.',
       'Memberikan solusi MEP berkualitas tinggi\nMembangun SDM kompeten & bersertifikat\nBerinovasi untuk efisiensi energi\nMembangun kemitraan jangka panjang',
-      '500+', '200+', '16+', '24/7',
-      '(021) 1234-5678', '(021) 8765-4321', 'info@multistack.co.id',
+      // Stats — Beranda & Tentang Kami
+      '500+',   // stats_projects
+      '200+',   // stats_clients
+      '16+',    // stats_years
+      '24/7',   // stats_support  (Beranda: "Dukungan Teknis")
+      '350+',   // stats_staff    (Tentang Kami: "Tenaga Ahli")
+      // Kontak
+      '081280448636',
+      '081280448636',
+      'info@multistack.co.id',
       'Jl. Industri Raya No. 12, Jakarta Barat 11740',
       'Senin – Jumat: 08.00 – 17.00 WIB',
+      // Sosial
       'https://instagram.com/multistackindonesia',
       'https://linkedin.com/company/multistack-indonesia',
       'https://facebook.com/multistackindonesia',
+      // JSONB arrays
+      JSON.stringify([]),  // contact_persons (isi via CMS)
+      JSON.stringify([]),  // footer_contacts  (isi via CMS)
     ]);
     console.log('  ✔ Company settings');
+  } else {
+    // Jika sudah ada, pastikan kolom stats_staff terisi
+    await query(`
+      UPDATE company_settings
+      SET stats_staff = COALESCE(stats_staff, '350+')
+      WHERE stats_staff IS NULL
+    `);
+    console.log('  ✔ Company settings (sudah ada, skip insert)');
   }
 
-  // ── Kategori ───────────────────────────────────────────────────────────────
+  // ── Kategori ─────────────────────────────────────────────────────────────────
   const categories = [
-    ['HVAC & Pendingin', 'hvac-pendingin',     '❄', 'product',    1],
-    ['Elektrikal',       'elektrikal',          '⚡', 'product',    2],
-    ['Plumbing',         'plumbing',            '💧', 'product',    3],
-    ['Fire Protection',  'fire-protection',     '🔥', 'product',    4],
-    ['Automation',       'automation',          '🤖', 'product',    5],
-    ['Gedung Komersial', 'gedung-komersial',    '🏢', 'portfolio',  1],
-    ['Hotel & Hospitality','hotel-hospitality', '🏨', 'portfolio',  2],
-    ['Industri',         'industri',            '🏭', 'portfolio',  3],
-    ['Fasilitas Kesehatan','fasilitas-kesehatan','🏥', 'portfolio', 4],
-    ['Infrastruktur',    'infrastruktur',       '🛣', 'portfolio',  5],
+    ['HVAC & Pendingin',      'hvac-pendingin',      '❄', 'product',   1],
+    ['Elektrikal',            'elektrikal',           '⚡', 'product',   2],
+    ['Plumbing',              'plumbing',             '💧', 'product',   3],
+    ['Fire Protection',       'fire-protection',      '🔥', 'product',   4],
+    ['Automation',            'automation',           '🤖', 'product',   5],
+    ['Gedung Komersial',      'gedung-komersial',     '🏢', 'portfolio', 1],
+    ['Hotel & Hospitality',   'hotel-hospitality',    '🏨', 'portfolio', 2],
+    ['Industri',              'industri',             '🏭', 'portfolio', 3],
+    ['Fasilitas Kesehatan',   'fasilitas-kesehatan',  '🏥', 'portfolio', 4],
+    ['Infrastruktur',         'infrastruktur',        '🛣', 'portfolio', 5],
   ];
   for (const [name, slug, icon, type, sort] of categories) {
     await query(
@@ -63,31 +85,44 @@ async function seed() {
   }
   console.log('  ✔ Kategori');
 
-  // ── Layanan ────────────────────────────────────────────────────────────────
+  // ── Layanan ───────────────────────────────────────────────────────────────────
   const services = [
-    ['HVAC & Sistem Refrigerasi',   'hvac-sistem-refrigerasi',
-     'Perancangan, pengadaan, pemasangan, komisioning, dan perawatan sistem AC central, split, VRF, chiller, cooling tower, dan unit refrigerasi industri.',
-     'Perancangan & Engineering HVAC\nInstalasi & Komisioning\nPreventive Maintenance Berkala\nTroubleshooting & Emergency Response', '❄', 1],
-
-    ['Sistem Elektrikal',           'sistem-elektrikal',
-     'Distribusi daya tegangan rendah hingga menengah, panel MV/LV, trafo, UPS, genset, grounding, dan sistem proteksi petir.',
-     'Desain Sistem Distribusi Daya\nPanel MV/LV\nUPS & Genset\nEnergy Monitoring System', '⚡', 2],
-
-    ['Plumbing & Sanitasi',         'plumbing-sanitasi',
-     'Sistem air bersih, air panas, air limbah, pompa booster, water treatment, dan instalasi fixture sanitasi lengkap.',
-     'Sistem Air Bersih (Cold & Hot Water)\nPompa Booster & Submersible\nWater Treatment Plant\nSanitasi & Drainase Gedung', '💧', 3],
-
-    ['Fire Protection System',      'fire-protection-system',
-     'Deteksi dini, fire alarm, wet/dry sprinkler, suppression FM-200, fire hydrant, dan APAR bersertifikat NFPA.',
-     'Fire Alarm Addressable\nWet & Dry Sprinkler\nSuppression FM-200\nFire Hydrant & Hose Reel', '🔥', 4],
-
-    ['Building Automation System',  'building-automation-system',
-     'BMS/BAS, smart metering, integrasi IoT, SCADA, dan monitoring energi terpusat untuk efisiensi operasional gedung.',
-     'BMS/BAS Design & Engineering\nSCADA & HMI Development\nIoT Integration\nEnergy Metering & Sub-metering', '🤖', 5],
-
-    ['Maintenance & After-Sales',   'maintenance-after-sales',
-     'Preventive & corrective maintenance, spare parts original, garansi resmi, dan dukungan teknis 24/7 seluruh Indonesia.',
-     'Preventive Maintenance Schedule\nCorrective Maintenance & Repair\nSpare Parts Original & Garansi Resmi\nEmergency Response 24/7', '🔧', 6],
+    [
+      'HVAC & Sistem Refrigerasi', 'hvac-sistem-refrigerasi',
+      'Perancangan, pengadaan, pemasangan, komisioning, dan perawatan sistem AC central, split, VRF, chiller, cooling tower, dan unit refrigerasi industri.',
+      'Perancangan & Engineering HVAC\nInstalasi & Komisioning\nPreventive Maintenance Berkala\nTroubleshooting & Emergency Response',
+      '❄', 1,
+    ],
+    [
+      'Sistem Elektrikal', 'sistem-elektrikal',
+      'Distribusi daya tegangan rendah hingga menengah, panel MV/LV, trafo, UPS, genset, grounding, dan sistem proteksi petir.',
+      'Desain Sistem Distribusi Daya\nPanel MV/LV\nUPS & Genset\nEnergy Monitoring System',
+      '⚡', 2,
+    ],
+    [
+      'Plumbing & Sanitasi', 'plumbing-sanitasi',
+      'Sistem air bersih, air panas, air limbah, pompa booster, water treatment, dan instalasi fixture sanitasi lengkap.',
+      'Sistem Air Bersih (Cold & Hot Water)\nPompa Booster & Submersible\nWater Treatment Plant\nSanitasi & Drainase Gedung',
+      '💧', 3,
+    ],
+    [
+      'Fire Protection System', 'fire-protection-system',
+      'Deteksi dini, fire alarm, wet/dry sprinkler, suppression FM-200, fire hydrant, dan APAR bersertifikat NFPA.',
+      'Fire Alarm Addressable\nWet & Dry Sprinkler\nSuppression FM-200\nFire Hydrant & Hose Reel',
+      '🔥', 4,
+    ],
+    [
+      'Building Automation System', 'building-automation-system',
+      'BMS/BAS, smart metering, integrasi IoT, SCADA, dan monitoring energi terpusat untuk efisiensi operasional gedung.',
+      'BMS/BAS Design & Engineering\nSCADA & HMI Development\nIoT Integration\nEnergy Metering & Sub-metering',
+      '🤖', 5,
+    ],
+    [
+      'Maintenance & After-Sales', 'maintenance-after-sales',
+      'Preventive & corrective maintenance, spare parts original, garansi resmi, dan dukungan teknis 24/7 seluruh Indonesia.',
+      'Preventive Maintenance Schedule\nCorrective Maintenance & Repair\nSpare Parts Original & Garansi Resmi\nEmergency Response 24/7',
+      '🔧', 6,
+    ],
   ];
   for (const [name, slug, desc, scope, icon, sort] of services) {
     await query(
@@ -99,12 +134,12 @@ async function seed() {
   }
   console.log('  ✔ Layanan');
 
-  // ── Penghargaan ────────────────────────────────────────────────────────────
+  // ── Penghargaan & Sertifikasi ─────────────────────────────────────────────────
   const awards = [
-    ['sertifikasi', 'ISO 9001:2015',              'LRQA',        2019, 'Sistem Manajemen Mutu Internasional',         true,  1],
-    ['penghargaan', 'Best MEP Contractor Award',  'GAPENSI',     2023, 'Indonesia Construction Award — Kategori MEP', true,  2],
-    ['penghargaan', 'Top 10 Green Building',      'GBCI',        2024, 'Green Building Council Indonesia',            true,  3],
-    ['penghargaan', 'K3 Zero Accident Award',     'Kemnaker RI', 2023, 'Penghargaan Keselamatan & Kesehatan Kerja',   true,  4],
+    ['sertifikasi', 'ISO 9001:2015',             'LRQA',        2019, 'Sistem Manajemen Mutu Internasional',         true, 1],
+    ['penghargaan', 'Best MEP Contractor Award', 'GAPENSI',     2023, 'Indonesia Construction Award — Kategori MEP', true, 2],
+    ['penghargaan', 'Top 10 Green Building',     'GBCI',        2024, 'Green Building Council Indonesia',            true, 3],
+    ['penghargaan', 'K3 Zero Accident Award',    'Kemnaker RI', 2023, 'Penghargaan Keselamatan & Kesehatan Kerja',   true, 4],
   ];
   for (const [type, title, issued_by, year, desc, show_home, sort] of awards) {
     await query(
@@ -117,10 +152,14 @@ async function seed() {
   console.log('  ✔ Penghargaan & sertifikasi');
 
   console.log('\n✅  Seeding selesai!');
-  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+  console.log('━'.repeat(35));
   console.log('📧  Admin email : admin@multistack.co.id');
   console.log('🔑  Password    : multistack2024');
-  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
+  console.log('━'.repeat(35));
+  console.log('');
+  console.log('💡  Tips:');
+  console.log('    Isi Contact Person & Footer Kontak via CMS → Pengaturan → tab "Contact Person" & "Footer Kontak"');
+  console.log('');
 
   await pool.end();
 }

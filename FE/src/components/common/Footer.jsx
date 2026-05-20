@@ -19,6 +19,15 @@ const IconWA = () => (
   </svg>
 );
 
+// ── Fallback kontak jika CMS belum diisi ─────────────────────────────────────
+const FB = {
+  sales:   '081280448636',
+  service: '081280448636',
+  email:   'info@multistack.co.id',
+  address: 'Jl. Industri Raya No. 12, Jakarta Barat 11740',
+  hours:   'Senin – Jumat: 08.00 – 17.00 WIB',
+};
+
 export default function Footer() {
   const year = new Date().getFullYear();
 
@@ -27,12 +36,24 @@ export default function Footer() {
   const s        = settingsData?.data || {};
   const services = servicesData?.data || [];
 
-  const rawWA = (s.contact_sales || '').replace(/\D/g, '');
-  const waNum = rawWA.startsWith('0') ? '62' + rawWA.slice(1) : rawWA || '6281234567890';
+  // Gunakan CMS jika ada, fallback jika kosong
+  const phoneSales   = s.contact_sales    || FB.sales;
+  const phoneService = s.contact_service  || FB.service;
+  const email        = s.contact_email    || FB.email;
+  const address      = s.contact_address  || FB.address;
+  const hours        = s.operational_hours|| FB.hours;
+
+  // Nomor WA dari telepon sales
+  const rawWA = phoneSales.replace(/\D/g, '');
+  const waNum = rawWA.startsWith('0') ? '62' + rawWA.slice(1) : rawWA;
   const waUrl = `https://wa.me/${waNum}?text=${encodeURIComponent('Halo Multistack Indonesia, saya ingin berkonsultasi.')}`;
 
-  // Semua footer_contacts dari CMS ditampilkan
-  const footerContacts = Array.isArray(s.footer_contacts) ? s.footer_contacts : [];
+  // ── Contact Person untuk Footer ──────────────────────────────────────────────
+  // Cek footer_contacts dulu, jika kosong fallback ke contact_persons
+  // Sehingga user tidak perlu isi 2 kali — cukup isi salah satu
+  const fcRaw = Array.isArray(s.footer_contacts)  ? s.footer_contacts  : [];
+  const cpRaw = Array.isArray(s.contact_persons)  ? s.contact_persons  : [];
+  const contactList = fcRaw.length > 0 ? fcRaw : cpRaw;
 
   return (
     <footer className={styles.footer}>
@@ -77,15 +98,13 @@ export default function Footer() {
           </ul>
         </div>
 
-        {/* Layanan — dari API /services (terintegrasi dengan halaman Layanan) */}
+        {/* Layanan — dari API */}
         <div className={styles.col}>
           <h4>Layanan</h4>
           <ul>
             {services.length > 0
               ? services.map(svc => (
-                  <li key={svc.id}>
-                    <Link to="/layanan">{svc.name}</Link>
-                  </li>
+                  <li key={svc.id}><Link to="/layanan">{svc.name}</Link></li>
                 ))
               : ['HVAC & Refrigerasi', 'Sistem Elektrikal', 'Plumbing & Sanitasi',
                  'Fire Protection', 'Building Automation', 'Maintenance'].map(svc => (
@@ -95,33 +114,30 @@ export default function Footer() {
           </ul>
         </div>
 
-        {/* Kontak — semua dari CMS settings */}
+        {/* Kontak — selalu tampil, dengan fallback */}
         <div className={styles.col}>
           <h4>Kontak</h4>
           <ul>
-            {s.contact_sales && (
-              <li><a href={`tel:${s.contact_sales.replace(/\D/g, '')}`}>📞 {s.contact_sales}</a></li>
-            )}
-            {s.contact_service && (
-              <li><a href={`tel:${s.contact_service.replace(/\D/g, '')}`}>🔧 {s.contact_service}</a></li>
-            )}
-            {s.contact_email && (
-              <li><a href={`mailto:${s.contact_email}`}>✉ {s.contact_email}</a></li>
-            )}
-            {s.contact_address && (
-              <li><span>📍 {s.contact_address}</span></li>
-            )}
-            {s.operational_hours && (
-              <li><span>🕐 {s.operational_hours}</span></li>
-            )}
+            <li>
+              <a href={`tel:${phoneSales.replace(/\D/g, '')}`}>📞 {phoneSales}</a>
+            </li>
+            <li>
+              <a href={`tel:${phoneService.replace(/\D/g, '')}`}>🔧 {phoneService}</a>
+            </li>
+            <li>
+              <a href={`mailto:${email}`}>✉ {email}</a>
+            </li>
+            <li><span>📍 {address}</span></li>
+            <li><span>🕐 {hours}</span></li>
           </ul>
 
-          {/* Semua contact person dari footer_contacts CMS */}
-          {footerContacts.length > 0 && (
+          {/* Contact Person — tampil semua dari CMS */}
+          {/* Pakai footer_contacts jika ada, jika tidak pakai contact_persons */}
+          {contactList.length > 0 && (
             <>
               <h4 className={styles.subHeading}>Contact Person</h4>
               <ul className={styles.cpList}>
-                {footerContacts.map((cp, i) => (
+                {contactList.map((cp, i) => (
                   <li key={i} className={styles.cpItem}>
                     <div className={styles.cpAvatar}>
                       {(cp.name || '?').slice(0, 2).toUpperCase()}
