@@ -1,4 +1,6 @@
-// ── Hero.jsx ──────────────────────────────────────────────────────────────────
+// ── Hero.jsx ─────────────────────────────────────────────────────────────────
+// Komponen ini HANYA ditampilkan jika tidak ada banner dari CMS.
+// Jika ada banner, BannerSlider yang tampil di posisi ini.
 import { Link } from 'react-router-dom';
 import styles from './Hero.module.css';
 
@@ -6,9 +8,10 @@ export default function Hero() {
   return (
     <section className={styles.hero}>
       <div className={styles.bg} />
-      {/* Grid lines */}
       <div className={styles.gridLines}>
-        <span style={{ left: '25%' }} /><span style={{ left: '50%' }} /><span style={{ left: '75%' }} />
+        <span style={{ left: '25%' }} />
+        <span style={{ left: '50%' }} />
+        <span style={{ left: '75%' }} />
       </div>
       <div className={styles.content}>
         <div className={styles.label}>
@@ -21,11 +24,14 @@ export default function Hero() {
           MEP
         </h1>
         <p className={styles.sub}>
-          Mekanikal, Elektrikal &amp; VAC untuk industri, komersial, dan proyek infrastruktur skala nasional. Teknologi terdepan, layanan komprehensif.
+          Mekanikal, Elektrikal &amp; VAC untuk industri, komersial, dan proyek
+          infrastruktur skala nasional. Teknologi terdepan, layanan komprehensif.
         </p>
         <div className={styles.actions}>
-          <Link to="/produk"  className="btn btn-red">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          <Link to="/produk" className="btn btn-red">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
             Lihat Produk
           </Link>
           <Link to="/kontak" className="btn btn-outline">Request Penawaran</Link>

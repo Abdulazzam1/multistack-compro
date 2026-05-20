@@ -1,0 +1,229 @@
+/* ── BannersPage.module.css ─────────────────────────────────────────────── */
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.headerDesc {
+  font-size: 0.83rem;
+  color: var(--white70);
+  margin-top: 0.35rem;
+  line-height: 1.55;
+}
+.headerDesc strong { color: var(--white); }
+
+/* ── Form tambah ─────────────────────────────────────────────────────────── */
+.formCard { padding: 1.75rem; margin-bottom: 1.5rem; }
+.formTitle {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  margin-bottom: 1.25rem;
+}
+
+/* Upload area */
+.uploadArea { margin-bottom: 1.25rem; }
+.uploadLabel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 2.5rem;
+  border: 2px dashed var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: border-color var(--trans), background var(--trans);
+  text-align: center;
+  color: var(--white70);
+}
+.uploadLabel:hover { border-color: var(--border-red); background: var(--red-dim); }
+.uploadLabel svg { color: var(--red); }
+.uploadLabel span { font-size: 0.9rem; font-weight: 600; }
+.uploadLabel small { font-size: 0.75rem; color: var(--white40); font-family: var(--font-mono); }
+
+.previewWrap { position: relative; }
+.previewImg {
+  width: 100%;
+  aspect-ratio: 16 / 6;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  display: block;
+}
+.removePreview {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  background: rgba(10,10,10,0.85);
+  border: 1px solid var(--border-red);
+  color: var(--red);
+  padding: 0.35rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: var(--trans);
+}
+.removePreview:hover { background: var(--red); color: #fff; }
+
+.formFields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+.fieldHint {
+  font-size: 0.72rem;
+  color: var(--white40);
+  margin-top: 0.3rem;
+  font-family: var(--font-mono);
+}
+.formActions { display: flex; gap: 0.75rem; }
+
+/* ── Loading & Empty ─────────────────────────────────────────────────────── */
+.loading { padding: 3rem; text-align: center; color: var(--white70); }
+.emptyState {
+  padding: 3rem 2rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+.emptyIcon { font-size: 3rem; opacity: 0.4; }
+.emptyState h3 { font-family: var(--font-display); font-size: 1.5rem; }
+.emptyState p { font-size: 0.85rem; color: var(--white70); line-height: 1.65; max-width: 460px; }
+
+/* ── Daftar banner ───────────────────────────────────────────────────────── */
+.bannerList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  margin-bottom: 2rem;
+}
+.bannerItem {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0;
+  overflow: hidden;
+  position: relative;
+  transition: border-color var(--trans);
+}
+.bannerItem:hover { border-color: var(--border-red); }
+.bannerItem.inactive { opacity: 0.55; }
+
+.orderBadge {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  background: rgba(10,10,10,0.8);
+  color: var(--white70);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  padding: 2px 6px;
+  border-radius: 3px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.thumbWrap {
+  width: 220px;
+  flex-shrink: 0;
+  position: relative;
+  background: var(--bg3);
+  aspect-ratio: 16 / 6;
+  overflow: hidden;
+}
+.thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease;
+}
+.bannerItem:hover .thumb { transform: scale(1.04); }
+
+.inactiveOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(10,10,10,0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-family: var(--font-mono);
+  color: var(--white70);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.itemInfo {
+  flex: 1;
+  padding: 1rem 0.5rem;
+  min-width: 0;
+}
+.itemTitle {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--white);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 0.3rem;
+}
+.noTitle { color: var(--white40); font-style: italic; font-weight: 400; }
+.itemUrl {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--white40);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.itemActions {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0 1rem;
+  flex-shrink: 0;
+}
+
+/* ── Tips ────────────────────────────────────────────────────────────────── */
+.tips {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--red);
+  border-radius: 0 8px 8px 0;
+  padding: 1.25rem 1.5rem;
+  margin-top: 1rem;
+}
+.tips h4 {
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+.tips ul {
+  list-style: disc;
+  padding-left: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.tips ul li {
+  font-size: 0.82rem;
+  color: var(--white70);
+  line-height: 1.55;
+}
+.tips ul li strong { color: var(--white); }
+
+/* ── Responsive ──────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .formFields { grid-template-columns: 1fr; }
+  .thumbWrap  { width: 140px; }
+  .itemActions { flex-wrap: wrap; padding: 0 0.75rem; }
+}

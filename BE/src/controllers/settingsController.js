@@ -14,9 +14,17 @@ exports.get = async (_req, res, next) => {
 
 exports.update = async (req, res, next) => {
   try {
-    const fields = req.body;
+    // Memisahkan id, created_at, dan updated_at agar tidak ikut masuk ke SET query
+    const { id, created_at, updated_at, ...fields } = req.body;
+    
     const keys   = Object.keys(fields);
     const values = Object.values(fields);
+
+    // Mencegah error syntax SQL jika ternyata tidak ada field tersisa untuk diupdate
+    if (keys.length === 0) {
+      const result = await query('SELECT * FROM company_settings ORDER BY id LIMIT 1');
+      return sendSuccess(res, result.rows[0], 'Tidak ada perubahan pengaturan.');
+    }
 
     const existing = await query('SELECT id FROM company_settings LIMIT 1');
 
