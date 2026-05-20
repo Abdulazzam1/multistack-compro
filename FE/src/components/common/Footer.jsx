@@ -1,9 +1,8 @@
-import { Link }    from 'react-router-dom';
+import { Link }      from 'react-router-dom';
 import { NAV_LINKS } from '../../utils/constants';
-import useFetch     from '../../hooks/useFetch';
-import styles       from './Footer.module.css';
+import useFetch      from '../../hooks/useFetch';
+import styles        from './Footer.module.css';
 
-// ── Icon SVG inline ──────────────────────────────────────────────────────────
 const IconIG = () => (
   <svg viewBox="0 0 24 24" fill="currentColor">
     <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
@@ -23,23 +22,23 @@ const IconWA = () => (
 export default function Footer() {
   const year = new Date().getFullYear();
 
-  // Ambil semua data kontak dari CMS
-  const { data } = useFetch('/settings');
-  const s = data?.data || {};
+  const { data: settingsData } = useFetch('/settings');
+  const { data: servicesData } = useFetch('/services');
+  const s        = settingsData?.data || {};
+  const services = servicesData?.data || [];
 
-  // Nomor WA: gunakan contact_sales, hilangkan karakter non-digit, ganti 0 depan jadi 62
-  const rawWA  = (s.contact_sales || '').replace(/\D/g, '');
-  const waNum  = rawWA.startsWith('0') ? '62' + rawWA.slice(1) : rawWA || '6281234567890';
-  const waUrl  = `https://wa.me/${waNum}?text=${encodeURIComponent('Halo Multistack Indonesia, saya ingin berkonsultasi.')}`;
+  const rawWA = (s.contact_sales || '').replace(/\D/g, '');
+  const waNum = rawWA.startsWith('0') ? '62' + rawWA.slice(1) : rawWA || '6281234567890';
+  const waUrl = `https://wa.me/${waNum}?text=${encodeURIComponent('Halo Multistack Indonesia, saya ingin berkonsultasi.')}`;
 
-  // footer_contacts: array [{name, phone, role}] dari CMS
+  // Semua footer_contacts dari CMS ditampilkan
   const footerContacts = Array.isArray(s.footer_contacts) ? s.footer_contacts : [];
 
   return (
     <footer className={styles.footer}>
       <div className={styles.inner}>
 
-        {/* ── Kolom Brand ── */}
+        {/* Brand */}
         <div className={styles.brand}>
           <div className={styles.logo}>
             <div className={styles.logoMark}>MI</div>
@@ -68,7 +67,7 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* ── Kolom Navigasi ── */}
+        {/* Navigasi */}
         <div className={styles.col}>
           <h4>Navigasi</h4>
           <ul>
@@ -78,38 +77,36 @@ export default function Footer() {
           </ul>
         </div>
 
-        {/* ── Kolom Layanan ── */}
+        {/* Layanan — dari API /services (terintegrasi dengan halaman Layanan) */}
         <div className={styles.col}>
           <h4>Layanan</h4>
           <ul>
-            {['HVAC & Refrigerasi','Sistem Elektrikal','Plumbing & Sanitasi','Fire Protection','Building Automation','Maintenance'].map(svc => (
-              <li key={svc}><Link to="/layanan">{svc}</Link></li>
-            ))}
+            {services.length > 0
+              ? services.map(svc => (
+                  <li key={svc.id}>
+                    <Link to="/layanan">{svc.name}</Link>
+                  </li>
+                ))
+              : ['HVAC & Refrigerasi', 'Sistem Elektrikal', 'Plumbing & Sanitasi',
+                 'Fire Protection', 'Building Automation', 'Maintenance'].map(svc => (
+                  <li key={svc}><Link to="/layanan">{svc}</Link></li>
+                ))
+            }
           </ul>
         </div>
 
-        {/* ── Kolom Kontak — semuanya dari CMS ── */}
+        {/* Kontak — semua dari CMS settings */}
         <div className={styles.col}>
           <h4>Kontak</h4>
           <ul>
             {s.contact_sales && (
-              <li>
-                <a href={`tel:${(s.contact_sales).replace(/\D/g,'')}`}>
-                  📞 {s.contact_sales}
-                </a>
-              </li>
+              <li><a href={`tel:${s.contact_sales.replace(/\D/g, '')}`}>📞 {s.contact_sales}</a></li>
             )}
             {s.contact_service && (
-              <li>
-                <a href={`tel:${(s.contact_service).replace(/\D/g,'')}`}>
-                  🔧 {s.contact_service}
-                </a>
-              </li>
+              <li><a href={`tel:${s.contact_service.replace(/\D/g, '')}`}>🔧 {s.contact_service}</a></li>
             )}
             {s.contact_email && (
-              <li>
-                <a href={`mailto:${s.contact_email}`}>✉ {s.contact_email}</a>
-              </li>
+              <li><a href={`mailto:${s.contact_email}`}>✉ {s.contact_email}</a></li>
             )}
             {s.contact_address && (
               <li><span>📍 {s.contact_address}</span></li>
@@ -119,11 +116,11 @@ export default function Footer() {
             )}
           </ul>
 
-          {/* Daftar contact person dinamis dari CMS (footer_contacts) */}
+          {/* Semua contact person dari footer_contacts CMS */}
           {footerContacts.length > 0 && (
             <>
               <h4 className={styles.subHeading}>Contact Person</h4>
-              <ul>
+              <ul className={styles.cpList}>
                 {footerContacts.map((cp, i) => (
                   <li key={i} className={styles.cpItem}>
                     <div className={styles.cpAvatar}>
@@ -131,9 +128,9 @@ export default function Footer() {
                     </div>
                     <div className={styles.cpInfo}>
                       <span className={styles.cpName}>{cp.name}</span>
-                      {cp.role && <span className={styles.cpRole}>{cp.role}</span>}
+                      {cp.role  && <span className={styles.cpRole}>{cp.role}</span>}
                       {cp.phone && (
-                        <a href={`tel:${cp.phone.replace(/\D/g,'')}`} className={styles.cpPhone}>
+                        <a href={`tel:${cp.phone.replace(/\D/g, '')}`} className={styles.cpPhone}>
                           {cp.phone}
                         </a>
                       )}

@@ -30,3 +30,18 @@
 .uploadBtn{width:100%;justify-content:center;cursor:pointer}
 @media(max-width:1024px){.grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:640px){.grid{grid-template-columns:1fr}}
+.header { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.5rem; flex-wrap:wrap; gap:1rem; }
+.grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; }
+.skeleton { height:240px; background:var(--bg2); border-radius:8px; animation:pulse 1.5s ease infinite; }
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.card { overflow:hidden; display:flex; flex-direction:column; }
+.cardImg { aspect-ratio:4/3; background:var(--bg3); overflow:hidden; display:flex; align-items:center; justify-content:center; }
+.cardImg img { width:100%; height:100%; object-fit:cover; transition:transform 0.4s ease; }
+.card:hover .cardImg img { transform:scale(1.05); }
+.imgPlaceholder { font-size:2.5rem; opacity:0.2; }
+.cardBody { padding:1rem; flex:1; }
+.cardTitle { font-weight:700; font-size:0.9rem; margin-bottom:0.25rem; line-height:1.35; color:var(--white); }
+.cardClient { font-size:0.75rem; color:var(--white70); }
+.cardActions { padding:0.75rem 1rem; border-top:1px solid var(--border); display:flex; gap:0.5rem; }
+@media(max-width:1024px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){.grid{grid-template-columns:1fr}}

@@ -12,7 +12,7 @@
   margin-bottom: 3rem;
 }
 
-/* ── Brand ─────────────────────────────────────────────────────────────────── */
+/* ── Brand ── */
 .logo { display: flex; align-items: center; gap: 12px; margin-bottom: 1rem; }
 .logoMark {
   width: 38px; height: 38px; background: var(--red);
@@ -35,7 +35,7 @@
 .socialBtn svg { width: 16px; height: 16px; }
 .socialBtn:hover { background: var(--red); border-color: var(--red); color: #fff; }
 
-/* ── Columns ────────────────────────────────────────────────────────────────── */
+/* ── Columns ── */
 .col h4, .subHeading {
   font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 3px;
   color: var(--red); text-transform: uppercase; margin-bottom: 1.25rem;
@@ -47,7 +47,8 @@
 }
 .col ul li a:hover { color: var(--white); padding-left: 4px; }
 
-/* ── Contact Person list (footer_contacts) ─────────────────────────────────── */
+/* ── Contact Person list ── */
+.cpList { list-style: none; padding: 0; margin: 0; }
 .cpItem {
   display: flex;
   align-items: flex-start;
@@ -69,7 +70,7 @@
 .cpPhone { font-size: 0.72rem; color: var(--red); font-family: var(--font-mono); transition: opacity var(--trans); }
 .cpPhone:hover { opacity: 0.8; }
 
-/* ── Bottom ─────────────────────────────────────────────────────────────────── */
+/* ── Bottom ── */
 .bottom {
   max-width: 1280px; margin: 0 auto; padding-top: 1.75rem;
   border-top: 1px solid var(--border);
@@ -79,10 +80,8 @@
 .powered { font-family: var(--font-mono); font-size: 0.7rem; }
 .powered span { color: var(--red); }
 
-/* ── Responsive ─────────────────────────────────────────────────────────────── */
-@media (max-width: 1024px) {
-  .inner { grid-template-columns: 1fr 1fr; }
-}
+/* ── Responsive ── */
+@media (max-width: 1024px) { .inner { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 640px) {
   .inner { grid-template-columns: 1fr; gap: 2rem; }
   .footer { padding: 3rem 1.25rem 1.5rem; }

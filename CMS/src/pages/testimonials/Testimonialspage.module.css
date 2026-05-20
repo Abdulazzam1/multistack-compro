@@ -1,0 +1,20 @@
+.header { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.5rem; flex-wrap:wrap; gap:1rem; }
+.grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; }
+.skeleton { height:200px; background:var(--bg2); border-radius:8px; animation:pulse 1.5s ease infinite; }
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.card { padding:1.5rem; position:relative; display:flex; flex-direction:column; gap:0.75rem; }
+.cardTop { display:flex; align-items:center; justify-content:space-between; }
+.stars { color:var(--red); font-size:0.875rem; letter-spacing:2px; }
+.cardActions { display:flex; gap:0.25rem; }
+.content { font-size:0.88rem; color:var(--white70); line-height:1.7; font-style:italic; flex:1; }
+.author { display:flex; align-items:center; gap:0.65rem; margin-top:auto; }
+.avatar { width:38px; height:38px; background:var(--red); border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-size:0.9rem; color:#fff; flex-shrink:0; }
+.name { font-weight:700; font-size:0.83rem; color:var(--white); }
+.role { font-size:0.73rem; color:var(--white70); }
+/* Star rating di modal */
+.starRow { display:flex; align-items:center; gap:0.25rem; }
+.starBtn { background:none; border:none; font-size:1.5rem; cursor:pointer; transition:transform 0.15s ease,color 0.15s ease; padding:0; }
+.starBtn:hover { transform:scale(1.2); }
+.ratingLabel { font-family:var(--font-mono); font-size:0.75rem; color:var(--white70); margin-left:0.5rem; }
+@media(max-width:1024px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){.grid{grid-template-columns:1fr}}
