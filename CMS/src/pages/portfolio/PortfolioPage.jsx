@@ -1,24 +1,24 @@
-import { useState }      from 'react';
+import { useState }   from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Plus, Pencil, Trash2, X, Save, Upload } from 'lucide-react';
 import api            from '@/services/api';
 import { uploadFile } from '@/services/uploadService';
 import { getErrorMsg, imgUrl } from '@/utils/helpers';
-import styles  from './PortfolioPage.module.css';
-import modal   from '@/components/shared/Modal.module.css';
+import styles from './PortfolioPage.module.css';
+import modal  from '@/components/shared/Modal.module.css';
 
 const EMPTY = {
   title:'', client:'', location:'', category:'', description:'', scope:'',
-  images:[], year: new Date().getFullYear(), is_featured:false, is_active:true, show_on_home:false
+  images:[], year: new Date().getFullYear(), is_featured:false, is_active:true, show_on_home:false,
 };
 
 export default function PortfolioPage() {
   const qc = useQueryClient();
-  const [open,     setOpen]     = useState(false);
-  const [form,     setForm]     = useState(EMPTY);
-  const [editId,   setEditId]   = useState(null);
-  const [saving,   setSaving]   = useState(false);
-  const [uploading,setUploading]= useState(false);
+  const [open,      setOpen]     = useState(false);
+  const [editId,    setEditId]   = useState(null);
+  const [form,      setForm]     = useState(EMPTY);
+  const [saving,    setSaving]   = useState(false);
+  const [uploading, setUploading]= useState(false);
 
   const { data, isLoading } = useQuery({
     queryKey: ['cms-portfolio'],
@@ -26,14 +26,31 @@ export default function PortfolioPage() {
   });
   const items = data || [];
 
-  const openNew  = () => { setForm(EMPTY); setEditId(null); setOpen(true); };
-  const openEdit = (p) => {
-    setForm({ title:p.title||'', client:p.client||'', location:p.location||'', category:p.category||'',
-              description:p.description||'', scope:p.scope||'', images:p.images||[],
-              year:p.year||new Date().getFullYear(), is_featured:p.is_featured||false,
-              is_active:p.is_active!==false, show_on_home:p.show_on_home||false });
-    setEditId(p.id); setOpen(true);
+  const openNew = () => {
+    setForm(EMPTY);
+    setEditId(null);
+    setOpen(true);
   };
+
+  // Semua field existing terisi — tidak ada yang kosong saat edit
+  const openEdit = (p) => {
+    setForm({
+      title:        p.title        ?? '',
+      client:       p.client       ?? '',
+      location:     p.location     ?? '',
+      category:     p.category     ?? '',
+      description:  p.description  ?? '',
+      scope:        p.scope        ?? '',
+      images:       Array.isArray(p.images) ? p.images : [],
+      year:         p.year         ?? new Date().getFullYear(),
+      is_featured:  p.is_featured  ?? false,
+      is_active:    p.is_active    !== false,
+      show_on_home: p.show_on_home ?? false,
+    });
+    setEditId(p.id);
+    setOpen(true);
+  };
+
   const closeModal = () => { setOpen(false); setEditId(null); };
 
   const handleUpload = async (e) => {
@@ -50,7 +67,8 @@ export default function PortfolioPage() {
     finally { setUploading(false); }
   };
 
-  const removeImage = (idx) => setForm(f => ({ ...f, images: f.images.filter((_, i) => i !== idx) }));
+  const removeImage = (idx) =>
+    setForm(f => ({ ...f, images: f.images.filter((_, i) => i !== idx) }));
 
   const handleSave = async () => {
     if (!form.title.trim()) return alert('Judul proyek wajib diisi.');
@@ -65,7 +83,7 @@ export default function PortfolioPage() {
   };
 
   const handleDelete = async (p) => {
-    if (!confirm(`Hapus portfolio "${p.title}"?`)) return;
+    if (!window.confirm(`Hapus portfolio "${p.title}"?`)) return;
     try { await api.delete(`/portfolio/${p.id}`); qc.invalidateQueries(['cms-portfolio']); }
     catch (err) { alert(getErrorMsg(err)); }
   };
@@ -74,7 +92,9 @@ export default function PortfolioPage() {
     <div className="animate-in">
       <div className={styles.header}>
         <h1 className="page-title">PORTFOLIO</h1>
-        <button onClick={openNew} className="btn btn-primary"><Plus size={16}/> Tambah Proyek</button>
+        <button onClick={openNew} className="btn btn-primary">
+          <Plus size={16}/> Tambah Proyek
+        </button>
       </div>
 
       {/* ── Modal Tambah / Edit ── */}
@@ -90,74 +110,107 @@ export default function PortfolioPage() {
             <div className={modal.body}>
               <div>
                 <label className="form-label">Judul Proyek *</label>
-                <input className="form-input" value={form.title} onChange={e=>setForm(f=>({...f,title:e.target.value}))} placeholder="Gedung Kantor XYZ" />
+                <input className="form-input" value={form.title}
+                  onChange={e => setForm(f => ({...f, title: e.target.value}))}
+                  placeholder="Gedung Kantor XYZ" />
               </div>
 
               <div className={modal.row2}>
                 <div>
                   <label className="form-label">Klien</label>
-                  <input className="form-input" value={form.client} onChange={e=>setForm(f=>({...f,client:e.target.value}))} placeholder="PT. Nama Klien" />
+                  <input className="form-input" value={form.client}
+                    onChange={e => setForm(f => ({...f, client: e.target.value}))}
+                    placeholder="PT. Nama Klien" />
                 </div>
                 <div>
                   <label className="form-label">Lokasi</label>
-                  <input className="form-input" value={form.location} onChange={e=>setForm(f=>({...f,location:e.target.value}))} placeholder="Jakarta Selatan" />
+                  <input className="form-input" value={form.location}
+                    onChange={e => setForm(f => ({...f, location: e.target.value}))}
+                    placeholder="Jakarta Selatan" />
                 </div>
               </div>
 
               <div className={modal.row2}>
                 <div>
                   <label className="form-label">Kategori</label>
-                  <input className="form-input" value={form.category} onChange={e=>setForm(f=>({...f,category:e.target.value}))} placeholder="Gedung Komersial, Hotel, dll." />
+                  <input className="form-input" value={form.category}
+                    onChange={e => setForm(f => ({...f, category: e.target.value}))}
+                    placeholder="Gedung Komersial, Hotel, Industri..." />
                 </div>
                 <div>
                   <label className="form-label">Tahun Selesai</label>
                   <input type="number" className="form-input" value={form.year}
-                    onChange={e=>setForm(f=>({...f,year:parseInt(e.target.value)||new Date().getFullYear()}))} />
+                    onChange={e => setForm(f => ({...f, year: parseInt(e.target.value) || new Date().getFullYear()}))}
+                    min={2000} max={2100} />
                 </div>
               </div>
 
               <div>
                 <label className="form-label">Deskripsi Proyek</label>
                 <textarea className="form-input" rows={3} value={form.description}
-                  onChange={e=>setForm(f=>({...f,description:e.target.value}))} placeholder="Deskripsi singkat proyek..." />
+                  onChange={e => setForm(f => ({...f, description: e.target.value}))}
+                  placeholder="Deskripsi singkat proyek..." />
               </div>
 
               <div>
-                <label className="form-label">Lingkup Pekerjaan <span style={{color:'var(--white40)',fontFamily:'var(--font-mono)',fontSize:'0.65rem',textTransform:'none',letterSpacing:0}}>(satu per baris)</span></label>
+                <label className="form-label">
+                  Lingkup Pekerjaan
+                  <span style={{color:'var(--white40)',fontFamily:'var(--font-mono)',fontSize:'0.62rem',textTransform:'none',letterSpacing:0,marginLeft:'0.5rem'}}>
+                    (satu item per baris)
+                  </span>
+                </label>
                 <textarea className="form-input" rows={5} value={form.scope}
-                  onChange={e=>setForm(f=>({...f,scope:e.target.value}))}
+                  onChange={e => setForm(f => ({...f, scope: e.target.value}))}
                   placeholder={"HVAC Central 2.000 TR\nDistribusi Daya MV/LV\nFire Protection NFPA"} />
               </div>
 
               <div className={modal.checkRow}>
-                <label className={modal.toggle}><input type="checkbox" checked={form.is_featured} onChange={e=>setForm(f=>({...f,is_featured:e.target.checked}))} /><span>Unggulan</span></label>
-                <label className={modal.toggle}><input type="checkbox" checked={form.show_on_home} onChange={e=>setForm(f=>({...f,show_on_home:e.target.checked}))} /><span>Tampil di Beranda</span></label>
-                <label className={modal.toggle}><input type="checkbox" checked={form.is_active} onChange={e=>setForm(f=>({...f,is_active:e.target.checked}))} /><span>Aktif</span></label>
+                <label className={modal.toggle}>
+                  <input type="checkbox" checked={form.is_featured}
+                    onChange={e => setForm(f => ({...f, is_featured: e.target.checked}))} />
+                  <span>Proyek Unggulan</span>
+                </label>
+                <label className={modal.toggle}>
+                  <input type="checkbox" checked={form.show_on_home}
+                    onChange={e => setForm(f => ({...f, show_on_home: e.target.checked}))} />
+                  <span>Tampil di Beranda</span>
+                </label>
+                <label className={modal.toggle}>
+                  <input type="checkbox" checked={form.is_active}
+                    onChange={e => setForm(f => ({...f, is_active: e.target.checked}))} />
+                  <span>Aktif</span>
+                </label>
               </div>
 
               <div>
-                <label className="form-label">Foto Proyek</label>
+                <label className="form-label">
+                  Foto Proyek
+                  <span style={{color:'var(--white40)',fontFamily:'var(--font-mono)',fontSize:'0.62rem',textTransform:'none',letterSpacing:0,marginLeft:'0.5rem'}}>
+                    (bisa lebih dari 1)
+                  </span>
+                </label>
                 {form.images.length > 0 && (
                   <div className={modal.imgGrid}>
                     {form.images.map((img, i) => (
                       <div key={i} className={modal.imgWrap}>
                         <img src={imgUrl(img)} alt={`foto-${i+1}`} />
-                        <button onClick={() => removeImage(i)}>✕</button>
+                        <button onClick={() => removeImage(i)} title="Hapus foto">✕</button>
                       </div>
                     ))}
                   </div>
                 )}
                 <label className={`btn btn-outline ${modal.uploadBtn}`}>
-                  <Upload size={14}/>{uploading ? 'Mengupload...' : 'Upload Foto'}
-                  <input type="file" accept="image/*" multiple onChange={handleUpload} disabled={uploading} style={{display:'none'}} />
+                  <Upload size={14}/>
+                  {uploading ? 'Mengupload...' : 'Upload Foto'}
+                  <input type="file" accept="image/*" multiple
+                    onChange={handleUpload} disabled={uploading} style={{display:'none'}} />
                 </label>
-                <p style={{fontSize:'0.72rem',color:'var(--white40)',marginTop:'0.4rem',fontFamily:'var(--font-mono)'}}>Bisa upload lebih dari 1 foto</p>
               </div>
             </div>
 
             <div className={modal.footer}>
               <button className="btn btn-primary" onClick={handleSave} disabled={saving}>
-                <Save size={15}/>{saving ? 'Menyimpan...' : 'Simpan Proyek'}
+                <Save size={15}/> {saving ? 'Menyimpan...' : 'Simpan Proyek'}
               </button>
               <button className="btn btn-outline" onClick={closeModal}>Batal</button>
             </div>
@@ -166,38 +219,52 @@ export default function PortfolioPage() {
       )}
 
       {/* ── Grid Portfolio ── */}
-      <div className={styles.grid}>
-        {isLoading
-          ? [1,2,3,4,5,6].map(i => <div key={i} className={styles.skeleton}/>)
-          : items.map(p => (
-              <div key={p.id} className={`card ${styles.card}`}>
-                <div className={styles.cardImg}>
-                  {p.images?.[0]
-                    ? <img src={imgUrl(p.images[0])} alt={p.title} />
-                    : <div className={styles.imgPlaceholder}>🏗</div>}
-                </div>
-                <div className={styles.cardBody}>
-                  <div style={{display:'flex',gap:'4px',marginBottom:'0.5rem',flexWrap:'wrap'}}>
-                    {p.is_featured  && <span className="badge badge-yellow">Unggulan</span>}
-                    {p.show_on_home && <span className="badge badge-green">Beranda</span>}
-                    {p.category && <span className="badge badge-gray">{p.category}</span>}
-                    {p.year     && <span className="badge badge-gray">{p.year}</span>}
-                  </div>
-                  <h3 className={styles.cardTitle}>{p.title}</h3>
-                  {p.client && <p className={styles.cardClient}>📍 {p.location} — {p.client}</p>}
-                </div>
-                <div className={styles.cardActions}>
-                  <button onClick={() => openEdit(p)} className="btn btn-outline btn-sm"><Pencil size={13}/> Edit</button>
-                  <button onClick={() => handleDelete(p)} className="btn btn-danger btn-sm"><Trash2 size={13}/></button>
-                </div>
-              </div>
-            ))
-        }
-      </div>
-      {!isLoading && items.length === 0 && (
-        <div className="card" style={{padding:'3rem',textAlign:'center',color:'var(--white70)'}}>
+      {isLoading ? (
+        <div className={styles.grid}>
+          {[1,2,3,4,5,6].map(i => <div key={i} className={styles.skeleton}/>)}
+        </div>
+      ) : items.length === 0 ? (
+        <div className="card" style={{padding:'3rem', textAlign:'center', color:'var(--white70)'}}>
           Belum ada portfolio.{' '}
-          <button className="btn btn-outline btn-sm" onClick={openNew} style={{marginLeft:'0.5rem'}}>Tambah sekarang</button>
+          <button className="btn btn-outline btn-sm" onClick={openNew} style={{marginLeft:'0.5rem'}}>
+            Tambah sekarang
+          </button>
+        </div>
+      ) : (
+        <div className={styles.grid}>
+          {items.map(p => (
+            <div key={p.id} className={`card ${styles.card}`}>
+              <div className={styles.cardImg}>
+                {p.images?.[0]
+                  ? <img src={imgUrl(p.images[0])} alt={p.title} />
+                  : <div className={styles.imgPlaceholder}>🏗</div>}
+              </div>
+              <div className={styles.cardBody}>
+                <div style={{display:'flex', gap:'4px', marginBottom:'0.5rem', flexWrap:'wrap'}}>
+                  {p.is_featured  && <span className="badge badge-yellow">Unggulan</span>}
+                  {p.show_on_home && <span className="badge badge-green">Beranda</span>}
+                  {p.category && <span className="badge badge-gray">{p.category}</span>}
+                  {p.year     && <span className="badge badge-gray">{p.year}</span>}
+                </div>
+                <h3 className={styles.cardTitle}>{p.title}</h3>
+                {(p.location || p.client) && (
+                  <p className={styles.cardClient}>
+                    {p.location && `📍 ${p.location}`}
+                    {p.location && p.client && ' — '}
+                    {p.client}
+                  </p>
+                )}
+              </div>
+              <div className={styles.cardActions}>
+                <button onClick={() => openEdit(p)} className="btn btn-outline btn-sm">
+                  <Pencil size={13}/> Edit
+                </button>
+                <button onClick={() => handleDelete(p)} className="btn btn-danger btn-sm">
+                  <Trash2 size={13}/>
+                </button>
+              </div>
+            </div>
+          ))}
         </div>
       )}
     </div>

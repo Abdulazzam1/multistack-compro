@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════════════════════════
    Modal.module.css — Shared modal styles untuk semua CMS pages
-   Import di setiap page yang butuh modal
+   Struktur: Overlay → Modal (flex col) → Header + Body(scroll) + Footer
 ═══════════════════════════════════════════════════════════════ */
 
 /* ── Overlay ── */
@@ -11,10 +11,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1rem;
-  background: rgba(0, 0, 0, 0.78);
+  padding: 1.5rem;
+  background: rgba(0, 0, 0, 0.8);
   backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   animation: overlayIn 0.2s ease;
+  /* Biarkan scrollbar overlay muncul jika modal sangat tinggi */
+  overflow-y: auto;
 }
 @keyframes overlayIn {
   from { opacity: 0; }
@@ -28,38 +31,44 @@
   border-radius: 12px;
   width: 100%;
   max-width: 620px;
-  /* Scroll jika konten melebihi layar */
-  max-height: calc(100vh - 2rem);
+  /* Flex column: header fixed + body scroll + footer fixed */
   display: flex;
   flex-direction: column;
+  /* Tidak pernah lebih tinggi dari viewport dikurangi padding overlay */
+  max-height: calc(100vh - 3rem);
+  /* Pastikan tidak overflow ke luar layar */
   overflow: hidden;
   animation: modalIn 0.25s ease;
+  /* Posisi mandiri agar tidak bergantung pada viewport height semata */
+  margin: auto;
 }
 @keyframes modalIn {
-  from { opacity: 0; transform: translateY(14px) scale(0.98); }
-  to   { opacity: 1; transform: translateY(0) scale(1); }
+  from { opacity: 0; transform: translateY(12px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0)    scale(1); }
 }
 
-/* Varian lebar */
+/* Varian ukuran */
 .modalSm { max-width: 480px; }
-.modalLg { max-width: 760px; }
+.modalLg { max-width: 780px; }
 
-/* ── Header — fixed, tidak ikut scroll ── */
+/* ── Header — tidak ikut scroll ── */
 .header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1.25rem 1.5rem;
+  gap: 1rem;
+  padding: 1.125rem 1.5rem;
   border-bottom: 1px solid var(--border);
-  flex-shrink: 0;
+  flex-shrink: 0;           /* ← penting: tidak menyusut */
+  background: var(--bg2);
 }
 .header h2 {
   font-family: var(--font-display);
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   color: var(--white);
   line-height: 1;
+  margin: 0;
 }
-
 .closeBtn {
   background: none;
   border: none;
@@ -70,38 +79,42 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background var(--trans), color var(--trans);
   flex-shrink: 0;
+  transition: background 0.2s, color 0.2s;
+  line-height: 0;
 }
 .closeBtn:hover { background: var(--white10); color: var(--white); }
 
-/* ── Body — scrollable ── */
+/* ── Body — SCROLLABLE ── */
 .body {
   flex: 1;
-  overflow-y: auto;
+  overflow-y: auto;          /* ← scroll ada di sini */
+  overflow-x: hidden;
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  /* Custom scrollbar */
+  /* Scrollbar tipis merah */
   scrollbar-width: thin;
   scrollbar-color: var(--red) transparent;
 }
-.body::-webkit-scrollbar { width: 4px; }
+.body::-webkit-scrollbar       { width: 4px; }
+.body::-webkit-scrollbar-track { background: transparent; }
 .body::-webkit-scrollbar-thumb { background: var(--red); border-radius: 2px; }
 
-/* ── Footer — fixed, tidak ikut scroll ── */
+/* ── Footer — tidak ikut scroll ── */
 .footer {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 1.25rem 1.5rem;
+  padding: 1.125rem 1.5rem;
   border-top: 1px solid var(--border);
-  flex-shrink: 0;
+  flex-shrink: 0;            /* ← penting: tidak menyusut */
   background: var(--bg2);
+  flex-wrap: wrap;
 }
 
-/* ── Form helpers di dalam modal ── */
+/* ── Form layout helpers ── */
 .row2 {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -120,10 +133,12 @@
   color: var(--white70);
   cursor: pointer;
   user-select: none;
+  line-height: 1.4;
 }
 .toggle input {
   width: 16px;
   height: 16px;
+  flex-shrink: 0;
   accent-color: var(--red);
   cursor: pointer;
 }
@@ -131,21 +146,24 @@
   display: flex;
   gap: 1.25rem;
   flex-wrap: wrap;
+  align-items: center;
 }
 
-/* ── Image preview di dalam modal ── */
+/* ── Image preview ── */
 .imgPreview {
   aspect-ratio: 16 / 9;
   overflow: hidden;
   border-radius: 6px;
   border: 1px solid var(--border);
   margin-bottom: 0.5rem;
+  background: var(--bg3);
 }
-.imgPreview img { width: 100%; height: 100%; object-fit: cover; }
+.imgPreview img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
+/* ── Image grid (multi upload) ── */
 .imgGrid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 0.5rem;
   margin-bottom: 0.5rem;
 }
@@ -155,40 +173,49 @@
   background: var(--bg3);
   border-radius: 6px;
   overflow: hidden;
+  border: 1px solid var(--border);
 }
-.imgWrap img { width: 100%; height: 100%; object-fit: cover; }
+.imgWrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .imgWrap button {
   position: absolute;
   top: 3px;
   right: 3px;
-  background: rgba(230, 27, 27, 0.9);
+  background: rgba(230, 27, 27, 0.92);
   color: #fff;
   border: none;
   border-radius: 4px;
-  width: 22px;
-  height: 22px;
-  font-size: 10px;
+  width: 20px;
+  height: 20px;
+  font-size: 9px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  line-height: 1;
 }
+.imgWrap button:hover { background: var(--red); }
 
+/* ── Upload button full width ── */
 .uploadBtn {
   cursor: pointer;
   width: 100%;
   justify-content: center;
 }
 
-/* ── Responsive ── */
+/* ── Responsive: mobile bottom sheet ── */
 @media (max-width: 640px) {
-  .modal, .modalSm, .modalLg {
-    max-width: 100%;
-    max-height: calc(100vh - 1rem);
-    border-radius: 10px 10px 0 0;
-    margin-top: auto;
+  .overlay {
+    align-items: flex-end;
+    padding: 0;
   }
-  .overlay { align-items: flex-end; padding: 0; }
+  .modal,
+  .modalSm,
+  .modalLg {
+    max-width: 100%;
+    max-height: 92vh;
+    border-radius: 14px 14px 0 0;
+    margin: 0;
+  }
   .row2, .row3 { grid-template-columns: 1fr; }
-  .imgGrid { grid-template-columns: repeat(3, 1fr); }
+  .imgGrid { grid-template-columns: repeat(4, 1fr); }
 }
