@@ -1,5 +1,9 @@
-const { query }          = require('../config/db');
-const { sendSuccess }    = require('../utils/helpers');
+const { query }       = require('../config/db');
+const { sendSuccess } = require('../utils/helpers');
+
+// Kolom-kolom bertipe JSONB di tabel company_settings
+// Nilai array/object harus di-stringify sebelum dikirim ke PostgreSQL
+const JSONB_FIELDS = ['contact_persons', 'footer_contacts', 'company_values'];
 
 exports.get = async (_req, res, next) => {
   try {
@@ -14,22 +18,28 @@ exports.get = async (_req, res, next) => {
 
 exports.update = async (req, res, next) => {
   try {
-    // Memisahkan id, created_at, dan updated_at agar tidak ikut masuk ke SET query
+    // Pisahkan field metadata agar tidak masuk ke query SET
     const { id, created_at, updated_at, ...fields } = req.body;
-    
-    const keys   = Object.keys(fields);
-    const values = Object.values(fields);
 
-    // Mencegah error syntax SQL jika ternyata tidak ada field tersisa untuk diupdate
-    if (keys.length === 0) {
+    // Tidak ada field untuk diupdate
+    if (Object.keys(fields).length === 0) {
       const result = await query('SELECT * FROM company_settings ORDER BY id LIMIT 1');
-      return sendSuccess(res, result.rows[0], 'Tidak ada perubahan pengaturan.');
+      return sendSuccess(res, result.rows[0], 'Tidak ada perubahan.');
     }
+
+    // Stringify kolom JSONB jika nilainya array atau object
+    const keys   = Object.keys(fields);
+    const values = keys.map(key => {
+      const val = fields[key];
+      if (JSONB_FIELDS.includes(key) && (Array.isArray(val) || (val && typeof val === 'object'))) {
+        return JSON.stringify(val);
+      }
+      return val;
+    });
 
     const existing = await query('SELECT id FROM company_settings LIMIT 1');
 
     if (existing.rows.length) {
-      // Update baris yang sudah ada
       const sets = keys.map((k, i) => `${k} = $${i + 1}`).join(', ');
       values.push(existing.rows[0].id);
       await query(
@@ -37,10 +47,12 @@ exports.update = async (req, res, next) => {
         values
       );
     } else {
-      // Insert baris baru
       const cols = keys.join(', ');
       const phs  = keys.map((_, i) => `$${i + 1}`).join(', ');
-      await query(`INSERT INTO company_settings (${cols}) VALUES (${phs})`, values);
+      await query(
+        `INSERT INTO company_settings (${cols}) VALUES (${phs})`,
+        values
+      );
     }
 
     const result = await query('SELECT * FROM company_settings ORDER BY id LIMIT 1');

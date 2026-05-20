@@ -4,11 +4,15 @@
   padding: 4rem 2rem 2rem;
 }
 .inner {
-  max-width: 1280px; margin: 0 auto;
-  display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
-  gap: 3rem; margin-bottom: 3rem;
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1.2fr;
+  gap: 3rem;
+  margin-bottom: 3rem;
 }
-/* Brand */
+
+/* ── Brand ─────────────────────────────────────────────────────────────────── */
 .logo { display: flex; align-items: center; gap: 12px; margin-bottom: 1rem; }
 .logoMark {
   width: 38px; height: 38px; background: var(--red);
@@ -16,7 +20,10 @@
   clip-path: polygon(0 0,85% 0,100% 15%,100% 100%,15% 100%,0 85%);
   font-family: var(--font-display); font-size: 1rem; color: #fff;
 }
-.logoText { display: flex; flex-direction: column; line-height: 1; font-family: var(--font-display); font-size: 1.2rem; letter-spacing: 2px; }
+.logoText {
+  display: flex; flex-direction: column; line-height: 1;
+  font-family: var(--font-display); font-size: 1.2rem; letter-spacing: 2px;
+}
 .sub { font-size: 0.55rem; color: var(--red); letter-spacing: 3px; font-family: var(--font-body); font-weight: 600; text-transform: uppercase; }
 .desc { font-size: 0.83rem; color: var(--white70); line-height: 1.7; max-width: 260px; margin-bottom: 1.25rem; }
 .socials { display: flex; gap: 0.5rem; }
@@ -27,17 +34,42 @@
 }
 .socialBtn svg { width: 16px; height: 16px; }
 .socialBtn:hover { background: var(--red); border-color: var(--red); color: #fff; }
-/* Columns */
-.col h4 {
+
+/* ── Columns ────────────────────────────────────────────────────────────────── */
+.col h4, .subHeading {
   font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 3px;
   color: var(--red); text-transform: uppercase; margin-bottom: 1.25rem;
 }
+.subHeading { margin-top: 1.5rem; }
 .col ul li { margin-bottom: 0.6rem; }
 .col ul li a, .col ul li span {
   font-size: 0.83rem; color: var(--white70); transition: color var(--trans); display: block;
 }
 .col ul li a:hover { color: var(--white); padding-left: 4px; }
-/* Bottom */
+
+/* ── Contact Person list (footer_contacts) ─────────────────────────────────── */
+.cpItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  margin-bottom: 0.85rem;
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid var(--border);
+}
+.cpItem:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.cpAvatar {
+  width: 32px; height: 32px; flex-shrink: 0;
+  background: var(--red); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-size: 0.75rem; color: #fff;
+}
+.cpInfo { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.cpName { font-size: 0.82rem; font-weight: 700; color: var(--white); }
+.cpRole { font-size: 0.72rem; color: var(--white70); }
+.cpPhone { font-size: 0.72rem; color: var(--red); font-family: var(--font-mono); transition: opacity var(--trans); }
+.cpPhone:hover { opacity: 0.8; }
+
+/* ── Bottom ─────────────────────────────────────────────────────────────────── */
 .bottom {
   max-width: 1280px; margin: 0 auto; padding-top: 1.75rem;
   border-top: 1px solid var(--border);
@@ -46,5 +78,13 @@
 .bottom p { font-size: 0.75rem; color: var(--white40); }
 .powered { font-family: var(--font-mono); font-size: 0.7rem; }
 .powered span { color: var(--red); }
-@media (max-width: 1024px) { .inner { grid-template-columns: 1fr 1fr; } }
-@media (max-width: 640px) { .inner { grid-template-columns: 1fr; gap: 2rem; } .footer { padding: 3rem 1.25rem 1.5rem; } .bottom { flex-direction: column; text-align: center; } }
+
+/* ── Responsive ─────────────────────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .inner { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 640px) {
+  .inner { grid-template-columns: 1fr; gap: 2rem; }
+  .footer { padding: 3rem 1.25rem 1.5rem; }
+  .bottom { flex-direction: column; text-align: center; }
+}
