@@ -7,7 +7,7 @@ import { getErrorMsg, formatDateShort, imgUrl } from '@/utils/helpers';
 import styles from './NewsPage.module.css';
 import modal  from '@/components/shared/Modal.module.css';
 
-const CAT_LABELS = { berita:'Berita', aktivitas:'Aktivitas', csr:'CSR' };
+const CAT_LABELS = { berita: 'Berita', aktivitas: 'Aktivitas', csr: 'CSR' };
 
 export default function NewsPage() {
   const qc = useQueryClient();
@@ -21,8 +21,8 @@ export default function NewsPage() {
 
   const deleteMut = useMutation({
     mutationFn: (id) => api.delete(`/news/${id}`),
-    onSuccess: () => { qc.invalidateQueries(['cms-news']); setConfirm(null); },
-    onError:   (err) => alert(getErrorMsg(err)),
+    onSuccess:  () => { qc.invalidateQueries(['cms-news']); setConfirm(null); },
+    onError:    (err) => alert(getErrorMsg(err)),
   });
 
   const togglePublish = useMutation({
@@ -39,17 +39,21 @@ export default function NewsPage() {
         </Link>
       </div>
 
-      {/* ── Konfirmasi Hapus — pakai Modal.module.css ── */}
+      {/* ── Konfirmasi Hapus ── */}
       {confirm && (
         <div className={modal.overlay} onClick={() => setConfirm(null)}>
           <div className={`${modal.modal} ${modal.modalSm}`} onClick={e => e.stopPropagation()}>
             <div className={modal.header}>
               <h2>Hapus Berita?</h2>
-              <button className={modal.closeBtn} onClick={() => setConfirm(null)}><X size={18}/></button>
+              <button className={modal.closeBtn} onClick={() => setConfirm(null)}>
+                <X size={18}/>
+              </button>
             </div>
             <div className={modal.body}>
-              <p style={{color:'var(--white70)', fontSize:'0.9rem', lineHeight:1.6}}>
-                Berita <strong style={{color:'var(--white)'}}>&ldquo;{confirm.title}&rdquo;</strong> akan dihapus permanen dan tidak bisa dikembalikan.
+              <p style={{ color: 'var(--white70)', fontSize: '0.9rem', lineHeight: 1.6 }}>
+                Berita <strong style={{ color: 'var(--white)' }}>
+                  &ldquo;{confirm.title}&rdquo;
+                </strong> akan dihapus permanen.
               </p>
             </div>
             <div className={modal.footer}>
@@ -60,52 +64,58 @@ export default function NewsPage() {
               >
                 {deleteMut.isLoading ? 'Menghapus...' : 'Ya, Hapus'}
               </button>
-              <button className="btn btn-outline" onClick={() => setConfirm(null)}>Batal</button>
+              <button className="btn btn-outline" onClick={() => setConfirm(null)}>
+                Batal
+              </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* ── Tabel Berita ── */}
+      {/* ── Tabel ── */}
       <div className="card">
-        <div style={{overflowX:'auto'}}>
+        <div style={{ overflowX: 'auto' }}>
           {isLoading ? (
-            <div style={{padding:'2rem', textAlign:'center', color:'var(--white70)'}}>Memuat...</div>
+            <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--white70)' }}>
+              Memuat...
+            </div>
           ) : (
-            <table style={{width:'100%', borderCollapse:'collapse'}}>
-              <thead style={{background:'var(--bg3)', borderBottom:'1px solid var(--border)'}}>
+            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+              <thead style={{ background: 'var(--bg3)', borderBottom: '1px solid var(--border)' }}>
                 <tr>
                   <th className="th">Judul</th>
-                  <th className="th" style={{width:100}}>Kategori</th>
-                  <th className="th" style={{width:120}}>Penulis</th>
-                  <th className="th" style={{width:110}}>Tanggal</th>
-                  <th className="th" style={{width:90}}>Status</th>
-                  <th className="th" style={{textAlign:'right', width:130}}>Aksi</th>
+                  <th className="th" style={{ width: 100 }}>Kategori</th>
+                  <th className="th" style={{ width: 120 }}>Penulis</th>
+                  <th className="th" style={{ width: 110 }}>Tanggal</th>
+                  <th className="th" style={{ width: 90 }}>Status</th>
+                  <th className="th" style={{ textAlign: 'right', width: 130 }}>Aksi</th>
                 </tr>
               </thead>
               <tbody>
                 {items.length === 0 ? (
                   <tr>
-                    <td className="td" colSpan={6} style={{textAlign:'center', padding:'3rem', color:'var(--white70)'}}>
+                    <td className="td" colSpan={6} style={{ textAlign: 'center', padding: '3rem', color: 'var(--white70)' }}>
                       Belum ada berita.{' '}
-                      <Link to="/news/new" style={{color:'var(--red)'}}>Tulis sekarang →</Link>
+                      <Link to="/news/new" style={{ color: 'var(--red)' }}>
+                        Tulis sekarang →
+                      </Link>
                     </td>
                   </tr>
                 ) : items.map(n => (
-                  <tr key={n.id} style={{borderBottom:'1px solid var(--border)'}}>
+                  <tr key={n.id} style={{ borderBottom: '1px solid var(--border)' }}>
                     <td className="td">
-                      <div style={{display:'flex', alignItems:'center', gap:'0.75rem'}}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                         {n.cover_image && (
                           <div className={styles.thumb}>
                             <img src={imgUrl(n.cover_image)} alt={n.title} />
                           </div>
                         )}
-                        <div style={{minWidth:0}}>
-                          <p style={{fontWeight:600, fontSize:'0.88rem', color:'var(--white)', marginBottom:'2px', overflow:'hidden', whiteSpace:'nowrap', textOverflow:'ellipsis', maxWidth:320}}>
+                        <div style={{ minWidth: 0 }}>
+                          <p style={{ fontWeight: 600, fontSize: '0.88rem', color: 'var(--white)', marginBottom: '2px', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis', maxWidth: 320 }}>
                             {n.title}
                           </p>
                           {n.excerpt && (
-                            <p style={{fontSize:'0.72rem', color:'var(--white40)', overflow:'hidden', whiteSpace:'nowrap', textOverflow:'ellipsis', maxWidth:320}}>
+                            <p style={{ fontSize: '0.72rem', color: 'var(--white40)', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis', maxWidth: 320 }}>
                               {n.excerpt}
                             </p>
                           )}
@@ -113,12 +123,14 @@ export default function NewsPage() {
                       </div>
                     </td>
                     <td className="td">
-                      <span className="badge badge-gray">{CAT_LABELS[n.category] || n.category}</span>
+                      <span className="badge badge-gray">
+                        {CAT_LABELS[n.category] || n.category}
+                      </span>
                     </td>
-                    <td className="td" style={{fontSize:'0.82rem', color:'var(--white70)'}}>
+                    <td className="td" style={{ fontSize: '0.82rem', color: 'var(--white70)' }}>
                       {n.author}
                     </td>
-                    <td className="td" style={{fontSize:'0.75rem', color:'var(--white40)', fontFamily:'var(--font-mono)'}}>
+                    <td className="td" style={{ fontSize: '0.75rem', color: 'var(--white40)', fontFamily: 'var(--font-mono)' }}>
                       {formatDateShort(n.created_at)}
                     </td>
                     <td className="td">
@@ -127,7 +139,7 @@ export default function NewsPage() {
                       </span>
                     </td>
                     <td className="td">
-                      <div style={{display:'flex', justifyContent:'flex-end', gap:'0.4rem'}}>
+                      <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.4rem' }}>
                         <button
                           onClick={() => togglePublish.mutate({ id: n.id, is_published: !n.is_published })}
                           className="btn btn-outline btn-sm"
@@ -138,7 +150,10 @@ export default function NewsPage() {
                         <Link to={`/news/${n.id}/edit`} className="btn btn-outline btn-sm">
                           <Pencil size={13}/>
                         </Link>
-                        <button onClick={() => setConfirm(n)} className="btn btn-danger btn-sm">
+                        <button
+                          onClick={() => setConfirm(n)}
+                          className="btn btn-danger btn-sm"
+                        >
                           <Trash2 size={13}/>
                         </button>
                       </div>

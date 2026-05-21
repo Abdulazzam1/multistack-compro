@@ -1,6 +1,7 @@
-const { query }              = require('../config/db');
+const { query }                          = require('../config/db');
 const { sendSuccess, sendError, toSlug } = require('../utils/helpers');
 
+// ── GET semua berita ─────────────────────────────────────────────────────────
 exports.getAll = async (req, res, next) => {
   try {
     const {
@@ -44,6 +45,7 @@ exports.getAll = async (req, res, next) => {
   }
 };
 
+// ── GET by slug — untuk FE publik (hanya yang sudah terbit) ─────────────────
 exports.getBySlug = async (req, res, next) => {
   try {
     const result = await query(
@@ -61,6 +63,25 @@ exports.getBySlug = async (req, res, next) => {
   }
 };
 
+// ── GET by ID — untuk CMS edit (semua status, butuh auth) ────────────────────
+exports.getById = async (req, res, next) => {
+  try {
+    const result = await query(
+      'SELECT * FROM news WHERE id = $1',
+      [req.params.id]
+    );
+
+    if (!result.rows.length) {
+      return sendError(res, 'Berita tidak ditemukan.', 404);
+    }
+
+    return sendSuccess(res, result.rows[0]);
+  } catch (err) {
+    next(err);
+  }
+};
+
+// ── CREATE ───────────────────────────────────────────────────────────────────
 exports.create = async (req, res, next) => {
   try {
     const {
@@ -80,7 +101,8 @@ exports.create = async (req, res, next) => {
 
     const slug   = `${toSlug(title)}-${Date.now()}`;
     const result = await query(
-      `INSERT INTO news (title, slug, category, excerpt, content, cover_image, author, is_published, show_on_home)
+      `INSERT INTO news
+         (title, slug, category, excerpt, content, cover_image, author, is_published, show_on_home)
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
        RETURNING *`,
       [title.trim(), slug, category, excerpt, content, cover_image, author, is_published, show_on_home]
@@ -92,6 +114,7 @@ exports.create = async (req, res, next) => {
   }
 };
 
+// ── UPDATE ───────────────────────────────────────────────────────────────────
 exports.update = async (req, res, next) => {
   try {
     const {
@@ -107,9 +130,15 @@ exports.update = async (req, res, next) => {
 
     const result = await query(
       `UPDATE news
-       SET title = $1, category = $2, excerpt = $3, content = $4,
-           cover_image = $5, author = $6, is_published = $7,
-           show_on_home = $8, updated_at = NOW()
+       SET title        = $1,
+           category     = $2,
+           excerpt      = $3,
+           content      = $4,
+           cover_image  = $5,
+           author       = $6,
+           is_published = $7,
+           show_on_home = $8,
+           updated_at   = NOW()
        WHERE id = $9
        RETURNING *`,
       [title, category, excerpt, content, cover_image, author, is_published, show_on_home, req.params.id]
@@ -125,6 +154,7 @@ exports.update = async (req, res, next) => {
   }
 };
 
+// ── DELETE ───────────────────────────────────────────────────────────────────
 exports.remove = async (req, res, next) => {
   try {
     await query('DELETE FROM news WHERE id = $1', [req.params.id]);

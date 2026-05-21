@@ -8,8 +8,9 @@ import styles from './PortfolioPage.module.css';
 import modal  from '@/components/shared/Modal.module.css';
 
 const EMPTY = {
-  title:'', client:'', location:'', category:'', description:'', scope:'',
-  images:[], year: new Date().getFullYear(), is_featured:false, is_active:true, show_on_home:false,
+  title: '', client: '', location: '', category: '', description: '', scope: '',
+  images: [], year: new Date().getFullYear(),
+  is_featured: false, is_active: true, show_on_home: false,
 };
 
 export default function PortfolioPage() {
@@ -32,7 +33,7 @@ export default function PortfolioPage() {
     setOpen(true);
   };
 
-  // Semua field existing terisi — tidak ada yang kosong saat edit
+  // Semua field existing pasti terisi — tidak ada yang kosong saat buka edit
   const openEdit = (p) => {
     setForm({
       title:        p.title        ?? '',
@@ -41,7 +42,7 @@ export default function PortfolioPage() {
       category:     p.category     ?? '',
       description:  p.description  ?? '',
       scope:        p.scope        ?? '',
-      images:       Array.isArray(p.images) ? p.images : [],
+      images:       Array.isArray(p.images) ? [...p.images] : [],
       year:         p.year         ?? new Date().getFullYear(),
       is_featured:  p.is_featured  ?? false,
       is_active:    p.is_active    !== false,
@@ -97,136 +98,200 @@ export default function PortfolioPage() {
         </button>
       </div>
 
-      {/* ── Modal Tambah / Edit ── */}
+      {/* ── Modal Tambah / Edit ──────────────────────────────────────────── */}
       {open && (
         <div className={modal.overlay} onClick={closeModal}>
+          {/*
+            * Pakai modalLg untuk portfolio karena banyak field.
+            * Modal sudah punya max-height + body scroll dari Modal.module.css.
+            */}
           <div className={`${modal.modal} ${modal.modalLg}`} onClick={e => e.stopPropagation()}>
 
+            {/* Header — fixed, tidak scroll */}
             <div className={modal.header}>
-              <h2>{editId ? 'Edit Proyek' : 'Tambah Proyek'}</h2>
-              <button className={modal.closeBtn} onClick={closeModal}><X size={18}/></button>
+              <h2>{editId ? 'Edit Proyek' : 'Tambah Proyek Baru'}</h2>
+              <button className={modal.closeBtn} onClick={closeModal} aria-label="Tutup">
+                <X size={18}/>
+              </button>
             </div>
 
+            {/* Body — scrollable */}
             <div className={modal.body}>
+
+              {/* Judul */}
               <div>
                 <label className="form-label">Judul Proyek *</label>
-                <input className="form-input" value={form.title}
+                <input
+                  className="form-input"
+                  value={form.title}
                   onChange={e => setForm(f => ({...f, title: e.target.value}))}
-                  placeholder="Gedung Kantor XYZ" />
+                  placeholder="Contoh: Gedung Perkantoran XYZ Tower"
+                />
               </div>
 
+              {/* Klien & Lokasi */}
               <div className={modal.row2}>
                 <div>
                   <label className="form-label">Klien</label>
-                  <input className="form-input" value={form.client}
+                  <input
+                    className="form-input"
+                    value={form.client}
                     onChange={e => setForm(f => ({...f, client: e.target.value}))}
-                    placeholder="PT. Nama Klien" />
+                    placeholder="PT. Nama Klien"
+                  />
                 </div>
                 <div>
                   <label className="form-label">Lokasi</label>
-                  <input className="form-input" value={form.location}
+                  <input
+                    className="form-input"
+                    value={form.location}
                     onChange={e => setForm(f => ({...f, location: e.target.value}))}
-                    placeholder="Jakarta Selatan" />
+                    placeholder="Jakarta Selatan"
+                  />
                 </div>
               </div>
 
+              {/* Kategori & Tahun */}
               <div className={modal.row2}>
                 <div>
                   <label className="form-label">Kategori</label>
-                  <input className="form-input" value={form.category}
+                  <input
+                    className="form-input"
+                    value={form.category}
                     onChange={e => setForm(f => ({...f, category: e.target.value}))}
-                    placeholder="Gedung Komersial, Hotel, Industri..." />
+                    placeholder="Gedung Komersial, Hotel, Industri..."
+                  />
                 </div>
                 <div>
                   <label className="form-label">Tahun Selesai</label>
-                  <input type="number" className="form-input" value={form.year}
+                  <input
+                    type="number"
+                    className="form-input"
+                    value={form.year}
                     onChange={e => setForm(f => ({...f, year: parseInt(e.target.value) || new Date().getFullYear()}))}
-                    min={2000} max={2100} />
+                    min={2000}
+                    max={2100}
+                  />
                 </div>
               </div>
 
+              {/* Deskripsi */}
               <div>
                 <label className="form-label">Deskripsi Proyek</label>
-                <textarea className="form-input" rows={3} value={form.description}
+                <textarea
+                  className="form-input"
+                  rows={3}
+                  value={form.description}
                   onChange={e => setForm(f => ({...f, description: e.target.value}))}
-                  placeholder="Deskripsi singkat proyek..." />
+                  placeholder="Deskripsi singkat tentang proyek..."
+                />
               </div>
 
+              {/* Lingkup Pekerjaan */}
               <div>
                 <label className="form-label">
                   Lingkup Pekerjaan
-                  <span style={{color:'var(--white40)',fontFamily:'var(--font-mono)',fontSize:'0.62rem',textTransform:'none',letterSpacing:0,marginLeft:'0.5rem'}}>
-                    (satu item per baris)
+                  <span style={{color:'var(--white40)', fontFamily:'var(--font-mono)', fontSize:'0.62rem', textTransform:'none', letterSpacing:0, marginLeft:'0.5rem', fontWeight:400}}>
+                    satu item per baris
                   </span>
                 </label>
-                <textarea className="form-input" rows={5} value={form.scope}
+                <textarea
+                  className="form-input"
+                  rows={4}
+                  value={form.scope}
                   onChange={e => setForm(f => ({...f, scope: e.target.value}))}
-                  placeholder={"HVAC Central 2.000 TR\nDistribusi Daya MV/LV\nFire Protection NFPA"} />
+                  placeholder={"HVAC Central 2.000 TR\nDistribusi Daya MV/LV\nFire Protection System NFPA\nBuilding Automation System"}
+                />
               </div>
 
+              {/* Checkbox */}
               <div className={modal.checkRow}>
                 <label className={modal.toggle}>
-                  <input type="checkbox" checked={form.is_featured}
-                    onChange={e => setForm(f => ({...f, is_featured: e.target.checked}))} />
+                  <input
+                    type="checkbox"
+                    checked={form.is_featured}
+                    onChange={e => setForm(f => ({...f, is_featured: e.target.checked}))}
+                  />
                   <span>Proyek Unggulan</span>
                 </label>
                 <label className={modal.toggle}>
-                  <input type="checkbox" checked={form.show_on_home}
-                    onChange={e => setForm(f => ({...f, show_on_home: e.target.checked}))} />
+                  <input
+                    type="checkbox"
+                    checked={form.show_on_home}
+                    onChange={e => setForm(f => ({...f, show_on_home: e.target.checked}))}
+                  />
                   <span>Tampil di Beranda</span>
                 </label>
                 <label className={modal.toggle}>
-                  <input type="checkbox" checked={form.is_active}
-                    onChange={e => setForm(f => ({...f, is_active: e.target.checked}))} />
+                  <input
+                    type="checkbox"
+                    checked={form.is_active}
+                    onChange={e => setForm(f => ({...f, is_active: e.target.checked}))}
+                  />
                   <span>Aktif</span>
                 </label>
               </div>
 
+              {/* Upload Foto */}
               <div>
                 <label className="form-label">
                   Foto Proyek
-                  <span style={{color:'var(--white40)',fontFamily:'var(--font-mono)',fontSize:'0.62rem',textTransform:'none',letterSpacing:0,marginLeft:'0.5rem'}}>
-                    (bisa lebih dari 1)
+                  <span style={{color:'var(--white40)', fontFamily:'var(--font-mono)', fontSize:'0.62rem', textTransform:'none', letterSpacing:0, marginLeft:'0.5rem', fontWeight:400}}>
+                    bisa lebih dari 1
                   </span>
                 </label>
+
+                {/* Thumbnail foto yang sudah ada */}
                 {form.images.length > 0 && (
                   <div className={modal.imgGrid}>
                     {form.images.map((img, i) => (
                       <div key={i} className={modal.imgWrap}>
-                        <img src={imgUrl(img)} alt={`foto-${i+1}`} />
+                        <img src={imgUrl(img)} alt={`foto-${i + 1}`} />
                         <button onClick={() => removeImage(i)} title="Hapus foto">✕</button>
                       </div>
                     ))}
                   </div>
                 )}
+
                 <label className={`btn btn-outline ${modal.uploadBtn}`}>
                   <Upload size={14}/>
                   {uploading ? 'Mengupload...' : 'Upload Foto'}
-                  <input type="file" accept="image/*" multiple
-                    onChange={handleUpload} disabled={uploading} style={{display:'none'}} />
+                  <input
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    onChange={handleUpload}
+                    disabled={uploading}
+                    style={{ display: 'none' }}
+                  />
                 </label>
               </div>
-            </div>
 
+            </div>
+            {/* /Body */}
+
+            {/* Footer — fixed, tidak scroll */}
             <div className={modal.footer}>
               <button className="btn btn-primary" onClick={handleSave} disabled={saving}>
                 <Save size={15}/> {saving ? 'Menyimpan...' : 'Simpan Proyek'}
               </button>
               <button className="btn btn-outline" onClick={closeModal}>Batal</button>
             </div>
+
           </div>
         </div>
       )}
+      {/* /Modal */}
 
       {/* ── Grid Portfolio ── */}
       {isLoading ? (
         <div className={styles.grid}>
-          {[1,2,3,4,5,6].map(i => <div key={i} className={styles.skeleton}/>)}
+          {[1, 2, 3, 4, 5, 6].map(i => <div key={i} className={styles.skeleton}/>)}
         </div>
       ) : items.length === 0 ? (
-        <div className="card" style={{padding:'3rem', textAlign:'center', color:'var(--white70)'}}>
+        <div className="card" style={{ padding: '3rem', textAlign: 'center', color: 'var(--white70)' }}>
           Belum ada portfolio.{' '}
-          <button className="btn btn-outline btn-sm" onClick={openNew} style={{marginLeft:'0.5rem'}}>
+          <button className="btn btn-outline btn-sm" onClick={openNew} style={{ marginLeft: '0.5rem' }}>
             Tambah sekarang
           </button>
         </div>
@@ -240,7 +305,7 @@ export default function PortfolioPage() {
                   : <div className={styles.imgPlaceholder}>🏗</div>}
               </div>
               <div className={styles.cardBody}>
-                <div style={{display:'flex', gap:'4px', marginBottom:'0.5rem', flexWrap:'wrap'}}>
+                <div style={{ display: 'flex', gap: '4px', marginBottom: '0.5rem', flexWrap: 'wrap' }}>
                   {p.is_featured  && <span className="badge badge-yellow">Unggulan</span>}
                   {p.show_on_home && <span className="badge badge-green">Beranda</span>}
                   {p.category && <span className="badge badge-gray">{p.category}</span>}

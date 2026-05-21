@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════════════════════════
-   Modal.module.css — Shared modal styles untuk semua CMS pages
-   Struktur: Overlay → Modal (flex col) → Header + Body(scroll) + Footer
+   Modal.module.css — Shared modal untuk semua CMS pages
+   Struktur: Overlay → Modal(flex col) → Header(fixed) + Body(scroll) + Footer(fixed)
 ═══════════════════════════════════════════════════════════════ */
 
 /* ── Overlay ── */
@@ -8,15 +8,17 @@
   position: fixed;
   inset: 0;
   z-index: 300;
+  /* Pakai flex center agar modal selalu di tengah layar */
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1.5rem;
-  background: rgba(0, 0, 0, 0.8);
+  /* Padding atas-bawah beri ruang agar modal tidak mepet tepi */
+  padding: 1.25rem;
+  background: rgba(0, 0, 0, 0.82);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
-  animation: overlayIn 0.2s ease;
-  /* Biarkan scrollbar overlay muncul jika modal sangat tinggi */
+  animation: overlayIn 0.18s ease;
+  /* Jika viewport sangat kecil, overlay bisa di-scroll */
   overflow-y: auto;
 }
 @keyframes overlayIn {
@@ -24,77 +26,86 @@
   to   { opacity: 1; }
 }
 
-/* ── Modal box ── */
+/* ── Modal box — JANGAN pernah lebih tinggi dari viewport ── */
 .modal {
   background: var(--bg2);
   border: 1px solid var(--border);
   border-radius: 12px;
   width: 100%;
   max-width: 620px;
-  /* Flex column: header fixed + body scroll + footer fixed */
+  /*
+   * Kunci: modal tidak boleh lebih tinggi dari (viewport - 2 × padding overlay).
+   * calc(100vh - 2.5rem) = 100vh - (2 × 1.25rem)
+   */
+  max-height: calc(100vh - 2.5rem);
+  /* Flex column: header + body + footer */
   display: flex;
   flex-direction: column;
-  /* Tidak pernah lebih tinggi dari viewport dikurangi padding overlay */
-  max-height: calc(100vh - 3rem);
-  /* Pastikan tidak overflow ke luar layar */
+  /* overflow hidden agar border-radius tidak terpotong oleh child */
   overflow: hidden;
-  animation: modalIn 0.25s ease;
-  /* Posisi mandiri agar tidak bergantung pada viewport height semata */
+  /* Posisi mandiri jika overlay sangat kecil */
   margin: auto;
+  animation: modalIn 0.22s ease;
 }
 @keyframes modalIn {
-  from { opacity: 0; transform: translateY(12px) scale(0.98); }
+  from { opacity: 0; transform: translateY(10px) scale(0.985); }
   to   { opacity: 1; transform: translateY(0)    scale(1); }
 }
 
-/* Varian ukuran */
-.modalSm { max-width: 480px; }
-.modalLg { max-width: 780px; }
+/* Varian ukuran lebar */
+.modalSm { max-width: 460px; }
+.modalLg {
+  max-width: 700px;
+  /* modalLg lebih tinggi kontennya — beri sedikit lebih banyak ruang */
+  max-height: calc(100vh - 2.5rem);
+}
 
-/* ── Header — tidak ikut scroll ── */
+/* ── Header — TIDAK ikut scroll ── */
 .header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  padding: 1.125rem 1.5rem;
+  padding: 1rem 1.375rem;
   border-bottom: 1px solid var(--border);
-  flex-shrink: 0;           /* ← penting: tidak menyusut */
+  flex-shrink: 0;          /* ← tidak menyusut */
   background: var(--bg2);
 }
 .header h2 {
   font-family: var(--font-display);
-  font-size: 1.4rem;
+  font-size: 1.35rem;
   color: var(--white);
   line-height: 1;
   margin: 0;
 }
+
 .closeBtn {
   background: none;
   border: none;
   color: var(--white70);
   cursor: pointer;
-  padding: 6px;
+  padding: 5px;
   border-radius: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  transition: background 0.2s, color 0.2s;
   line-height: 0;
+  transition: background 0.2s, color 0.2s;
 }
-.closeBtn:hover { background: var(--white10); color: var(--white); }
+.closeBtn:hover { background: rgba(255,255,255,0.08); color: var(--white); }
 
 /* ── Body — SCROLLABLE ── */
 .body {
   flex: 1;
-  overflow-y: auto;          /* ← scroll ada di sini */
+  min-height: 0;           /* ← penting: agar flex child bisa scroll */
+  overflow-y: auto;
   overflow-x: hidden;
-  padding: 1.5rem;
+  padding: 1.375rem;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  /* Scrollbar tipis merah */
+  gap: 0.875rem;
+  /* Scrollbar tipis */
   scrollbar-width: thin;
   scrollbar-color: var(--red) transparent;
 }
@@ -102,29 +113,30 @@
 .body::-webkit-scrollbar-track { background: transparent; }
 .body::-webkit-scrollbar-thumb { background: var(--red); border-radius: 2px; }
 
-/* ── Footer — tidak ikut scroll ── */
+/* ── Footer — TIDAK ikut scroll ── */
 .footer {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 1.125rem 1.5rem;
+  padding: 1rem 1.375rem;
   border-top: 1px solid var(--border);
-  flex-shrink: 0;            /* ← penting: tidak menyusut */
+  flex-shrink: 0;          /* ← tidak menyusut */
   background: var(--bg2);
   flex-wrap: wrap;
 }
 
-/* ── Form layout helpers ── */
+/* ── Layout helpers form ── */
 .row2 {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1rem;
+  gap: 0.875rem;
 }
 .row3 {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  gap: 1rem;
+  gap: 0.875rem;
 }
+
 .toggle {
   display: flex;
   align-items: center;
@@ -142,6 +154,7 @@
   accent-color: var(--red);
   cursor: pointer;
 }
+
 .checkRow {
   display: flex;
   gap: 1.25rem;
@@ -149,7 +162,7 @@
   align-items: center;
 }
 
-/* ── Image preview ── */
+/* ── Image preview (single) ── */
 .imgPreview {
   aspect-ratio: 16 / 9;
   overflow: hidden;
@@ -164,7 +177,7 @@
 .imgGrid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 0.5rem;
+  gap: 0.4rem;
   margin-bottom: 0.5rem;
 }
 .imgWrap {
@@ -212,10 +225,13 @@
   .modalSm,
   .modalLg {
     max-width: 100%;
-    max-height: 92vh;
+    max-height: 90vh;
     border-radius: 14px 14px 0 0;
     margin: 0;
   }
   .row2, .row3 { grid-template-columns: 1fr; }
   .imgGrid { grid-template-columns: repeat(4, 1fr); }
+  .header  { padding: 0.875rem 1rem; }
+  .body    { padding: 1rem; }
+  .footer  { padding: 0.875rem 1rem; }
 }
