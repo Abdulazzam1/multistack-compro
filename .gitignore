@@ -1,13 +1,22 @@
-﻿node_modules/
+# Mengabaikan semua folder library (Sangat Penting)
+node_modules/
 **/node_modules/
+
+# Mengabaikan file environment rahasia
 .env
 **/.env
+
+# Mengabaikan folder hasil build frontend/CMS
 dist/
 **/dist/
 build/
 **/build/
+
+# Mengabaikan folder gambar dinamis di Backend
 BE/uploads/
 **/uploads/
+
+# Mengabaikan log error bawaan Node/Sistem OS
 npm-debug.log*
 yarn-error.log*
 .DS_Store
