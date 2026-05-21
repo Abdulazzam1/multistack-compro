@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
-import { Link, NavLink } from 'react-router-dom';
-import { NAV_LINKS } from '../../utils/constants';
-import styles from './Header.module.css';
+import { Link, NavLink }       from 'react-router-dom';
+import { NAV_LINKS }           from '../../utils/constants';
+import logoImg                 from '../../assets/multistack.png'; /* REVISI 2 */
+import styles                  from './Header.module.css';
 
 export default function Header() {
-  const [scrolled, setScrolled] = useState(false);
+  const [scrolled,   setScrolled]   = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
@@ -16,13 +17,14 @@ export default function Header() {
   return (
     <header className={`${styles.header} ${scrolled ? styles.scrolled : ''}`}>
       <div className={styles.inner}>
-        {/* Logo */}
+
+        {/* REVISI 2: Ganti placeholder (logoMark + logoText) → gambar logo asli */}
         <Link to="/" className={styles.logo}>
-          <div className={styles.logoMark}>MI</div>
-          <div className={styles.logoText}>
-            <span className={styles.logoName}>MULTISTACK</span>
-            <span className={styles.logoSub}>INDONESIA</span>
-          </div>
+          <img
+            src={logoImg}
+            alt="PT. Multistack Indonesia"
+            className={styles.logoImg}
+          />
         </Link>
 
         {/* Desktop Nav */}
@@ -32,7 +34,9 @@ export default function Header() {
               key={link.path}
               to={link.path}
               end={link.path === '/'}
-              className={({ isActive }) => `${styles.navLink} ${isActive ? styles.active : ''}`}
+              className={({ isActive }) =>
+                `${styles.navLink} ${isActive ? styles.active : ''}`
+              }
             >
               {link.label}
             </NavLink>
@@ -58,7 +62,9 @@ export default function Header() {
               key={link.path}
               to={link.path}
               end={link.path === '/'}
-              className={({ isActive }) => `${styles.mobileLink} ${isActive ? styles.active : ''}`}
+              className={({ isActive }) =>
+                `${styles.mobileLink} ${isActive ? styles.active : ''}`
+              }
             >
               {link.label}
             </NavLink>

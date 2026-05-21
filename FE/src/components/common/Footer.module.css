@@ -12,19 +12,15 @@
   margin-bottom: 3rem;
 }
 
-/* ── Brand ── */
-.logo { display: flex; align-items: center; gap: 12px; margin-bottom: 1rem; }
-.logoMark {
-  width: 38px; height: 38px; background: var(--red);
-  display: flex; align-items: center; justify-content: center;
-  clip-path: polygon(0 0,85% 0,100% 15%,100% 100%,15% 100%,0 85%);
-  font-family: var(--font-display); font-size: 1rem; color: #fff;
+/* ── Brand — REVISI 2: logo PNG asli ── */
+
+.logoLink { display: inline-block; margin-bottom: 1rem; }
+.logoImg {
+  height: 44px;       /* sesuaikan jika perlu */
+  width: auto;
+  object-fit: contain;
+  display: block;
 }
-.logoText {
-  display: flex; flex-direction: column; line-height: 1;
-  font-family: var(--font-display); font-size: 1.2rem; letter-spacing: 2px;
-}
-.sub { font-size: 0.55rem; color: var(--red); letter-spacing: 3px; font-family: var(--font-body); font-weight: 600; text-transform: uppercase; }
 .desc { font-size: 0.83rem; color: var(--white70); line-height: 1.7; max-width: 260px; margin-bottom: 1.25rem; }
 .socials { display: flex; gap: 0.5rem; }
 .socialBtn {
@@ -50,17 +46,13 @@
 /* ── Contact Person list ── */
 .cpList { list-style: none; padding: 0; margin: 0; }
 .cpItem {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.6rem;
-  margin-bottom: 0.85rem;
-  padding-bottom: 0.85rem;
+  display: flex; align-items: flex-start; gap: 0.6rem;
+  margin-bottom: 0.85rem; padding-bottom: 0.85rem;
   border-bottom: 1px solid var(--border);
 }
 .cpItem:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
 .cpAvatar {
-  width: 32px; height: 32px; flex-shrink: 0;
-  background: var(--red); border-radius: 50%;
+  width: 32px; height: 32px; flex-shrink: 0; background: var(--red); border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   font-family: var(--font-display); font-size: 0.75rem; color: #fff;
 }
@@ -86,4 +78,5 @@
   .inner { grid-template-columns: 1fr; gap: 2rem; }
   .footer { padding: 3rem 1.25rem 1.5rem; }
   .bottom { flex-direction: column; text-align: center; }
+  .logoImg { height: 36px; }
 }

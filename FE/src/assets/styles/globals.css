@@ -29,7 +29,7 @@
   --shadow:     0 20px 40px rgba(0,0,0,0.5);
 }
 
-/* ── Reset ─────────────────────────────────────────────────── */
+/* ── Reset ─────────────────────────────────────────────────────────────── */
 *,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; font-size: 16px; }
 body {
@@ -49,23 +49,33 @@ input, textarea, select {
   background: var(--bg3);
 }
 
-/* ── Scrollbar ─────────────────────────────────────────────── */
+/* ── Scrollbar ──────────────────────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
 ::-webkit-scrollbar-thumb { background: var(--red); border-radius: 2px; }
 
-/* ── Container ─────────────────────────────────────────────── */
+/* ── Container ──────────────────────────────────────────────────────────── */
 .container { max-width: 1280px; margin: 0 auto; padding: 0 2rem; width: 100%; }
 @media (max-width: 768px) { .container { padding: 0 1.25rem; } }
 
-/* ── Typography ────────────────────────────────────────────── */
+/* ── Typography ─────────────────────────────────────────────────────────── */
 .section-label {
-  display: inline-flex; align-items: center; gap: 0.5rem;
-  font-family: var(--font-mono); font-size: 0.7rem;
-  letter-spacing: 3px; color: var(--red); text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 3px;
+  color: var(--red);
+  text-transform: uppercase;
   margin-bottom: 1rem;
 }
-.section-label::before { content: ''; width: 24px; height: 2px; background: var(--red); border-radius: 1px; }
+/*
+ * REVISI 3: Hapus garis strip di sebelah kiri setiap sub-header (berlaku global).
+ * Baris berikut sengaja dihapus:
+ *   .section-label::before { content: ''; width: 24px; height: 2px; background: var(--red); ... }
+ * Teks sub-header sekarang langsung tampil tanpa dekorasi garis di depannya.
+ */
+
 .section-title {
   font-family: var(--font-display);
   font-size: clamp(2.5rem,5vw,4rem);
@@ -75,7 +85,7 @@ input, textarea, select {
 .section-sub { color: var(--white70); font-size: 1rem; line-height: 1.75; max-width: 580px; }
 .red-line { width: 48px; height: 3px; background: var(--red); border-radius: 2px; margin: 1rem 0; }
 
-/* ── Buttons ───────────────────────────────────────────────── */
+/* ── Buttons ────────────────────────────────────────────────────────────── */
 .btn {
   display: inline-flex; align-items: center; gap: 0.5rem;
   padding: 0.75rem 1.75rem; font-size: 0.82rem; font-weight: 600;
@@ -88,7 +98,7 @@ input, textarea, select {
 .btn-outline:hover { background: var(--red-dim); border-color: var(--red); }
 .btn svg { width: 16px; height: 16px; flex-shrink: 0; }
 
-/* ── Cards ─────────────────────────────────────────────────── */
+/* ── Cards ──────────────────────────────────────────────────────────────── */
 .card {
   background: var(--bg2); border: 1px solid var(--border);
   border-radius: var(--radius); overflow: hidden; transition: var(--trans);
@@ -105,12 +115,12 @@ input, textarea, select {
 .card-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.5rem; line-height: 1.35; }
 .card-text { font-size: 0.875rem; color: var(--white70); line-height: 1.65; }
 
-/* ── Section Padding ───────────────────────────────────────── */
+/* ── Section Padding ────────────────────────────────────────────────────── */
 .section { padding: 6rem 0; }
 .section-sm { padding: 4rem 0; }
 @media (max-width: 768px) { .section { padding: 4rem 0; } }
 
-/* ── Grid Helpers ──────────────────────────────────────────── */
+/* ── Grid Helpers ───────────────────────────────────────────────────────── */
 .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
 .grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; }
 .grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 1.5rem; }
@@ -122,7 +132,7 @@ input, textarea, select {
   .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
 }
 
-/* ── Form ───────────────────────────────────────────────────── */
+/* ── Form ───────────────────────────────────────────────────────────────── */
 .form-group { margin-bottom: 1.125rem; }
 .form-group label {
   display: block; font-size: 0.72rem; font-weight: 600;
@@ -148,7 +158,7 @@ input, textarea, select {
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 @media (max-width: 640px) { .form-row { grid-template-columns: 1fr; } }
 
-/* ── Category Badge ────────────────────────────────────────── */
+/* ── Category Badge ─────────────────────────────────────────────────────── */
 .badge-berita { background: rgba(230,27,27,0.1); color: var(--red); border: 1px solid var(--border-red); }
 .badge-aktivitas { background: rgba(255,165,0,0.1); color: #FFA500; border: 1px solid rgba(255,165,0,0.3); }
 .badge-csr { background: rgba(74,222,128,0.08); color: #4ADE80; border: 1px solid rgba(74,222,128,0.25); }
@@ -158,7 +168,7 @@ input, textarea, select {
   text-transform: uppercase; margin-bottom: 0.6rem;
 }
 
-/* ── Animations ────────────────────────────────────────────── */
+/* ── Animations ─────────────────────────────────────────────────────────── */
 @keyframes fadeInUp {
   from { opacity: 0; transform: translateY(24px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -186,18 +196,18 @@ input, textarea, select {
 .delay-3 { animation-delay: 0.3s; }
 .delay-4 { animation-delay: 0.4s; }
 
-/* ── Page Transition ───────────────────────────────────────── */
+/* ── Page Transition ────────────────────────────────────────────────────── */
 .page-enter { animation: fadeInUp 0.4s ease both; }
 
-/* ── Divider ───────────────────────────────────────────────── */
+/* ── Divider ────────────────────────────────────────────────────────────── */
 .divider { width: 100%; height: 1px; background: var(--border); }
 .divider-red { background: linear-gradient(90deg,transparent,var(--red),transparent); }
 
-/* ── Stat ───────────────────────────────────────────────────── */
+/* ── Stat ───────────────────────────────────────────────────────────────── */
 .stat-num { font-family: var(--font-display); font-size: clamp(2.5rem,5vw,4rem); color: var(--red); line-height: 1; }
 .stat-label { font-size: 0.78rem; letter-spacing: 2px; color: var(--white70); text-transform: uppercase; margin-top: 0.4rem; }
 
-/* ── Page Hero ─────────────────────────────────────────────── */
+/* ── Page Hero ──────────────────────────────────────────────────────────── */
 .page-hero {
   padding: 5rem 0 3.5rem;
   background: var(--bg);

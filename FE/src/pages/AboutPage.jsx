@@ -8,16 +8,15 @@ export default function AboutPage() {
   const s      = settingsData?.data || {};
   const awards = awardsData?.data   || [];
 
-  // ── Stats halaman Tentang Kami — murni dari CMS, tidak ada hardcode ────────
-  // Komposisi berbeda dari Beranda: ganti "Dukungan" → "Tenaga Ahli"
+  // Stats dari CMS
+  // REVISI 1c: fallback stats_years → '10+' bukan '16+'
   const statsAbout = [
     { num: s.stats_projects, label: 'Proyek Selesai' },
     { num: s.stats_clients,  label: 'Klien Aktif' },
     { num: s.stats_staff,    label: 'Tenaga Ahli' },
-    { num: s.stats_years,    label: 'Tahun Pengalaman' },
+    { num: s.stats_years || '10+', label: 'Tahun Pengalaman' },
   ];
 
-  // Tampilkan stats hanya jika minimal satu ada nilainya dari CMS
   const hasStats = statsAbout.some(st => st.num);
 
   return (
@@ -29,9 +28,11 @@ export default function AboutPage() {
           <nav className="breadcrumb">
             <a href="/">Beranda</a><span>/</span><span>Tentang Kami</span>
           </nav>
-          <div className="section-label">Siapa Kami</div>
+
+          {/* REVISI 1a: Label "Siapa Kami" dihapus — langsung ke page-title */}
+
           <h1 className="page-title">
-            TENTANG <em style={{ color:'var(--red)', fontStyle:'normal' }}>KAMI</em>
+            TENTANG <em style={{ color: 'var(--red)', fontStyle: 'normal' }}>KAMI</em>
           </h1>
           <p className="section-sub">Pelopor solusi MEP terpadu di Indonesia sejak 2008</p>
         </div>
@@ -42,7 +43,8 @@ export default function AboutPage() {
         <div className="container">
           <div className={styles.storyGrid}>
             <div>
-              <div className="section-label">Perjalanan Kami</div>
+              {/* section-label "Perjalanan Kami" juga dihapus (strip sudah hilang via globals.css,
+                  tapi labelnya juga bisa dihapus agar konsisten dengan revisi 1a) */}
               <h2 className="section-title">Dibangun di Atas <em>Kepercayaan</em></h2>
               <p className={styles.text}>
                 {s.about_description ||
@@ -80,7 +82,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ── Stats — dari CMS, hanya tampil jika ada data ── */}
+      {/* ── Stats ── */}
       {hasStats && (
         <section className={styles.statsSection}>
           <div className="container">
@@ -98,11 +100,19 @@ export default function AboutPage() {
         </section>
       )}
 
-      {/* ── Values ── */}
+      {/* ── Nilai Perusahaan ── */}
       <section className={styles.valuesSection}>
         <div className="container">
-          <div className="section-label">Nilai Perusahaan</div>
-          <h2 className="section-title">Apa yang <em>Mendefinisikan</em> Kami</h2>
+          {/*
+            REVISI 1b:
+            - "Nilai Perusahaan" → DIPERBESAR menggunakan class .valuesLabel
+            - "Apa yang Mendefinisikan Kami" → DIPERKECIL menggunakan class .valuesTitleSm
+            Keduanya tidak lagi memakai section-label / section-title global.
+          */}
+          <p className={styles.valuesLabel}>Nilai Perusahaan</p>
+          <h2 className={styles.valuesTitleSm}>
+            Apa yang <em>Mendefinisikan</em> Kami
+          </h2>
           <div className={styles.valuesGrid}>
             {[
               { icon: '🎯', title: 'Presisi',       desc: 'Setiap pekerjaan dikerjakan dengan standar teknis tertinggi dan quality control ketat.' },
@@ -120,10 +130,10 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ── Awards — dari CMS, fallback statis ── */}
+      {/* ── Awards ── */}
       <section className={styles.awardsSection}>
         <div className="container">
-          <div className="section-label">Penghargaan &amp; Sertifikasi</div>
+          {/* section-label "Penghargaan & Sertifikasi" dihapus, langsung ke judul */}
           <h2 className="section-title">Diakui oleh <em>Industri</em></h2>
           <div className={styles.awardsGrid}>
             {awards.length > 0

@@ -1,6 +1,7 @@
 import { Link }      from 'react-router-dom';
 import { NAV_LINKS } from '../../utils/constants';
 import useFetch      from '../../hooks/useFetch';
+import logoImg       from '../../assets/multistack.png'; /* REVISI 2 */
 import styles        from './Footer.module.css';
 
 const IconIG = () => (
@@ -19,7 +20,6 @@ const IconWA = () => (
   </svg>
 );
 
-// ── Fallback kontak jika CMS belum diisi ─────────────────────────────────────
 const FB = {
   sales:   '081280448636',
   service: '081280448636',
@@ -36,38 +36,33 @@ export default function Footer() {
   const s        = settingsData?.data || {};
   const services = servicesData?.data || [];
 
-  // Gunakan CMS jika ada, fallback jika kosong
   const phoneSales   = s.contact_sales    || FB.sales;
   const phoneService = s.contact_service  || FB.service;
   const email        = s.contact_email    || FB.email;
   const address      = s.contact_address  || FB.address;
   const hours        = s.operational_hours|| FB.hours;
 
-  // Nomor WA dari telepon sales
   const rawWA = phoneSales.replace(/\D/g, '');
   const waNum = rawWA.startsWith('0') ? '62' + rawWA.slice(1) : rawWA;
   const waUrl = `https://wa.me/${waNum}?text=${encodeURIComponent('Halo Multistack Indonesia, saya ingin berkonsultasi.')}`;
 
-  // ── Contact Person untuk Footer ──────────────────────────────────────────────
-  // Cek footer_contacts dulu, jika kosong fallback ke contact_persons
-  // Sehingga user tidak perlu isi 2 kali — cukup isi salah satu
-  const fcRaw = Array.isArray(s.footer_contacts)  ? s.footer_contacts  : [];
-  const cpRaw = Array.isArray(s.contact_persons)  ? s.contact_persons  : [];
+  const fcRaw       = Array.isArray(s.footer_contacts) ? s.footer_contacts : [];
+  const cpRaw       = Array.isArray(s.contact_persons)  ? s.contact_persons  : [];
   const contactList = fcRaw.length > 0 ? fcRaw : cpRaw;
 
   return (
     <footer className={styles.footer}>
       <div className={styles.inner}>
 
-        {/* Brand */}
+        {/* Brand — REVISI 2: logo PNG asli */}
         <div className={styles.brand}>
-          <div className={styles.logo}>
-            <div className={styles.logoMark}>MI</div>
-            <div className={styles.logoText}>
-              <span>MULTISTACK</span>
-              <span className={styles.sub}>INDONESIA</span>
-            </div>
-          </div>
+          <Link to="/" className={styles.logoLink}>
+            <img
+              src={logoImg}
+              alt="PT. Multistack Indonesia"
+              className={styles.logoImg}
+            />
+          </Link>
           <p className={styles.desc}>
             Solusi Terpadu Mekanikal, Elektrikal &amp; VAC. Teknologi andal, tim berpengalaman, layanan prima.
           </p>
@@ -98,7 +93,7 @@ export default function Footer() {
           </ul>
         </div>
 
-        {/* Layanan — dari API */}
+        {/* Layanan */}
         <div className={styles.col}>
           <h4>Layanan</h4>
           <ul>
@@ -114,25 +109,17 @@ export default function Footer() {
           </ul>
         </div>
 
-        {/* Kontak — selalu tampil, dengan fallback */}
+        {/* Kontak */}
         <div className={styles.col}>
           <h4>Kontak</h4>
           <ul>
-            <li>
-              <a href={`tel:${phoneSales.replace(/\D/g, '')}`}>📞 {phoneSales}</a>
-            </li>
-            <li>
-              <a href={`tel:${phoneService.replace(/\D/g, '')}`}>🔧 {phoneService}</a>
-            </li>
-            <li>
-              <a href={`mailto:${email}`}>✉ {email}</a>
-            </li>
+            <li><a href={`tel:${phoneSales.replace(/\D/g, '')}`}>📞 {phoneSales}</a></li>
+            <li><a href={`tel:${phoneService.replace(/\D/g, '')}`}>🔧 {phoneService}</a></li>
+            <li><a href={`mailto:${email}`}>✉ {email}</a></li>
             <li><span>📍 {address}</span></li>
             <li><span>🕐 {hours}</span></li>
           </ul>
 
-          {/* Contact Person — tampil semua dari CMS */}
-          {/* Pakai footer_contacts jika ada, jika tidak pakai contact_persons */}
           {contactList.length > 0 && (
             <>
               <h4 className={styles.subHeading}>Contact Person</h4>
