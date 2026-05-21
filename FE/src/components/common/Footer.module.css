@@ -12,16 +12,25 @@
   margin-bottom: 3rem;
 }
 
-/* ── Brand — REVISI 2: logo PNG asli ── */
+/* ── Brand — REVISI: Efek Badge Putih agar logo nyambung di background gelap ── */
 
 .logoLink { display: inline-block; margin-bottom: 1rem; }
 .logoImg {
-  height: 44px;       /* sesuaikan jika perlu */
+  height: 52px;       /* Diperbesar sedikit untuk mengakomodasi padding */
   width: auto;
   object-fit: contain;
   display: block;
+  /* Tambahan style agar logo menyatu sempurna */
+  background-color: #ffffff;
+  padding: 8px 14px;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  transition: transform var(--trans);
 }
-.desc { font-size: 0.83rem; color: var(--white70); line-height: 1.7; max-width: 260px; margin-bottom: 1.25rem; }
+.logoImg:hover {
+  transform: scale(1.02);
+}
+.desc { font-size: 0.83rem; color: var(--white70); line-height: 1.7; max-width: 260px; margin-bottom: 1.25rem; margin-top: 1.5rem; }
 .socials { display: flex; gap: 0.5rem; }
 .socialBtn {
   width: 36px; height: 36px; background: var(--white15); border: 1px solid var(--border);
@@ -78,5 +87,5 @@
   .inner { grid-template-columns: 1fr; gap: 2rem; }
   .footer { padding: 3rem 1.25rem 1.5rem; }
   .bottom { flex-direction: column; text-align: center; }
-  .logoImg { height: 36px; }
+  .logoImg { height: 44px; padding: 6px 12px; }
 }
