@@ -6,10 +6,12 @@
   border-bottom: 1px solid var(--border);
   transition: var(--trans);
 }
+
 .header.scrolled {
   background: rgba(10,10,10,0.97);
   box-shadow: 0 1px 0 var(--border-red);
 }
+
 .inner {
   max-width: 1280px; margin: 0 auto; padding: 0 2rem;
   height: 100%; display: flex; align-items: center;
@@ -29,6 +31,7 @@
   box-shadow: 0 2px 10px rgba(0,0,0,0.2);
   transition: transform var(--trans);
 }
+
 .logoImg:hover {
   transform: scale(1.03); /* Efek membesar sedikit saat di-hover */
 }
@@ -40,10 +43,12 @@
   letter-spacing: 0.5px; color: var(--white70); border-radius: 4px;
   position: relative; transition: color var(--trans); text-transform: uppercase;
 }
+
 .navLink::after {
   content: ''; position: absolute; bottom: 0; left: 50%; right: 50%;
   height: 2px; background: var(--red); transition: var(--trans); border-radius: 1px;
 }
+
 .navLink:hover, .navLink.active { color: var(--white); }
 .navLink:hover::after, .navLink.active::after { left: 0.85rem; right: 0.85rem; }
 .navCta {
@@ -65,18 +70,28 @@
 .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
 /* Mobile Nav */
+/* Mobile Nav */
 .mobileNav {
-  position: fixed; inset: var(--nav-h) 0 0;
-  background: rgba(10,10,10,0.98); z-index: 999;
+  position: absolute; /* Ubah dari fixed menjadi absolute agar mengikuti header */
+  top: var(--nav-h); 
+  left: 0; 
+  right: 0;
+  height: calc(100vh - var(--nav-h)); /* Paksa tinggi menutupi layar penuh hingga ke bawah */
+  background: #0a0a0a; /* Background hitam pekat */
+  z-index: 999;
   display: flex; flex-direction: column; padding: 1.5rem;
   border-top: 1px solid var(--border);
   animation: slideDown 0.25s ease;
+  overflow-y: auto; /* Tambahan agar menu bisa di-scroll jika layarnya kekecilan */
 }
+
 @keyframes slideDown { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
+
 .mobileLink {
   padding: 1rem; font-family: var(--font-display); font-size: 1.75rem;
   color: var(--white70); border-bottom: 1px solid var(--border); transition: color var(--trans);
 }
+
 .mobileLink:hover, .mobileLink.active { color: var(--red); }
 .mobileCta {
   margin-top: 1.25rem; padding: 1rem; background: var(--red); color: #fff;
